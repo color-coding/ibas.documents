@@ -1,0 +1,10 @@
+{
+  "documents": "文档&附件",
+  "documents_icon": "sap-icon://documents",
+  "documents_func_document": "文档",
+  "documents_app_document_list": "文档列表",
+  "documents_app_document_choose": "文档选择",
+  "documents_app_document_view": "文档查看",
+  "documents_app_document_edit": "文档编辑",
+  "documents_closing_delimiter": "----结束----"
+}

@@ -1,0 +1,9 @@
+[
+  {
+    "Id": "14f7a312-5d63-488e-bed4-ea093be6f183",
+    "Name": "Documents",
+    "Category": "",
+    "Address": ".../",
+    "Repository": "http://localhost:8080/documents/services/rest/data"
+  }
+]
