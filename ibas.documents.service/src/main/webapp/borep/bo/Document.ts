@@ -19,6 +19,7 @@ import {
     BODocumentLine,
     BOSimple,
     BOSimpleLine,
+    config,
 } from "ibas/index";
 import {
     IDocument,
@@ -28,7 +29,7 @@ import {
 export class Document extends BOSimple<Document> implements IDocument {
 
     /** 业务对象编码 */
-    static BUSINESS_OBJECT_CODE: string = "AVA_DC_DOCUMENT";
+    static BUSINESS_OBJECT_CODE: string = "${Company}_DC_DOCUMENT";
     /** 构造函数 */
     constructor() {
         super();
@@ -301,7 +302,7 @@ export class Document extends BOSimple<Document> implements IDocument {
 
     /** 初始化数据 */
     protected init(): void {
-        this.objectCode = Document.BUSINESS_OBJECT_CODE;
+        this.objectCode = config.applyVariables(Document.BUSINESS_OBJECT_CODE);
     }
 }
 

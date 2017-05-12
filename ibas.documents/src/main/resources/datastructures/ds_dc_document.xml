@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <Domain Name="Documents" ShortName="DC">
-  <Model Name="Document" Description="文档" ModelType="Simple" Mapped="AVA_DC_ODOC">
+  <Model Name="Document" Description="文档" ModelType="Simple" Mapped="${Company}_DC_ODOC">
     <Property Name="ObjectKey" Description="编号" DataType="Numeric" DataSubType="Default" EditSize="8" Mapped="ObjectKey" PrimaryKey="Yes"/>
     <Property Name="ObjectCode" Description="类型" DataType="Alphanumeric" DataSubType="Default" EditSize="30" Mapped="Object"/>
     <Property Name="LogInst" Description="实例号（版本）" DataType="Numeric" DataSubType="Default" EditSize="8" Mapped="LogInst"/>
@@ -27,5 +27,5 @@
     <Property Name="FileName" Description="文件名称" DataType="Alphanumeric" DataSubType="Default" EditSize="200" Mapped="FileName"/>
     <Property Name="Tags" Description="标签" DataType="Alphanumeric" DataSubType="Default" EditSize="200" Mapped="Tags"/>
   </Model>
-  <BusinessObject MappedModel="Document" ShortName="AVA_DC_DOCUMENT"/>
+  <BusinessObject MappedModel="Document" ShortName="${Company}_DC_DOCUMENT"/>
 </Domain>
