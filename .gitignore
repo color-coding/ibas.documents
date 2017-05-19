@@ -14,11 +14,12 @@ hs_err_pid*
 
 # ibas packages
 */src/main/webapp/3rdparty/
+*/src/main/webapp/modules/
 
 # log file
 *_log_*.txt
 
-# release folder
+# folder
 /release/
 /.vs/
 /.metadata/
