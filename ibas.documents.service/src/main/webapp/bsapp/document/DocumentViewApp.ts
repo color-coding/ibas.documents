@@ -40,7 +40,7 @@ export class DocumentViewApp extends ibas.BOViewService<IDocumentViewView> {
     }
     /** 编辑数据，参数：目标数据 */
     protected editData(): void {
-        let app = new DocumentEditApp();
+        let app: DocumentEditApp = new DocumentEditApp();
         app.navigation = this.navigation;
         app.viewShower = this.viewShower;
         app.run(this.viewData);
@@ -58,7 +58,7 @@ export class DocumentViewApp extends ibas.BOViewService<IDocumentViewView> {
     /** 查询数据 */
     protected fetchData(criteria: ibas.ICriteria | string): void {
         this.busy(true);
-        let that = this;
+        let that: this = this;
         if (typeof criteria === "string") {
             criteria = new ibas.Criteria();
             // 添加查询条件

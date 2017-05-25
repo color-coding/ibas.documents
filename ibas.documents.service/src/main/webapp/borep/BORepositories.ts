@@ -8,7 +8,7 @@
 
 import * as ibas from "ibas/index";
 import * as bo from "./bo/index";
-import { IBORepositoryDocuments } from "../api/index";
+import { IBORepositoryDocuments, BO_REPOSITORY_DOCUMENTS } from "../api/index";
 import { DataConverter4dc } from "./DataConverters";
 
 /** Documents 业务仓库 */
@@ -35,3 +35,5 @@ export class BORepositoryDocuments extends ibas.BORepositoryApplication implemen
     }
 
 }
+// 注册业务对象仓库到工厂
+ibas.boFactory.register(BO_REPOSITORY_DOCUMENTS, BORepositoryDocuments);

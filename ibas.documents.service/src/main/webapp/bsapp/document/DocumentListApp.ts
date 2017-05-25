@@ -44,8 +44,8 @@ export class DocumentListApp extends ibas.BOListApplication<IDocumentListView, b
     protected fetchData(criteria: ibas.ICriteria): void {
         try {
             this.busy(true);
-            let that = this;
-            let boRepository = new BORepositoryDocuments();
+            let that: this = this;
+            let boRepository: BORepositoryDocuments = new BORepositoryDocuments();
             boRepository.fetchDocument({
                 criteria: criteria,
                 onCompleted(opRslt: ibas.IOperationResult<bo.Document>): void {
@@ -67,7 +67,7 @@ export class DocumentListApp extends ibas.BOListApplication<IDocumentListView, b
     }
     /** 新建数据 */
     protected newData(): void {
-        let app = new DocumentEditApp();
+        let app: DocumentEditApp = new DocumentEditApp();
         app.navigation = this.navigation;
         app.viewShower = this.viewShower;
         app.run();
@@ -81,7 +81,7 @@ export class DocumentListApp extends ibas.BOListApplication<IDocumentListView, b
             ));
             return;
         }
-        let app = new DocumentViewApp();
+        let app: DocumentViewApp = new DocumentViewApp();
         app.navigation = this.navigation;
         app.viewShower = this.viewShower;
         app.run(data);
@@ -96,7 +96,7 @@ export class DocumentListApp extends ibas.BOListApplication<IDocumentListView, b
             ));
             return;
         }
-        let app = new DocumentEditApp();
+        let app: DocumentEditApp = new DocumentEditApp();
         app.navigation = this.navigation;
         app.viewShower = this.viewShower;
         app.run(data);
@@ -110,8 +110,8 @@ export class DocumentListApp extends ibas.BOListApplication<IDocumentListView, b
             ));
             return;
         }
-        let beDeleteds:ibas.ArrayList<bo.Document> = new ibas.ArrayList<bo.Document>();
-        if (data instanceof Array ) {
+        let beDeleteds: ibas.ArrayList<bo.Document> = new ibas.ArrayList<bo.Document>();
+        if (data instanceof Array) {
             for (let item of data) {
                 if (ibas.objects.instanceOf(item, bo.Document)) {
                     item.delete();
@@ -123,7 +123,7 @@ export class DocumentListApp extends ibas.BOListApplication<IDocumentListView, b
         if (beDeleteds.length === 0) {
             return;
         }
-        let that = this;
+        let that: this = this;
         this.messages({
             type: ibas.emMessageType.QUESTION,
             title: ibas.i18n.prop(this.name),
@@ -133,7 +133,7 @@ export class DocumentListApp extends ibas.BOListApplication<IDocumentListView, b
                 if (action === ibas.emMessageAction.YES) {
                     try {
                         let boRepository: BORepositoryDocuments = new BORepositoryDocuments();
-                        let saveMethod: Function = function(beSaved: bo.Document):void {
+                        let saveMethod: Function = function (beSaved: bo.Document): void {
                             boRepository.saveDocument({
                                 beSaved: beSaved,
                                 onCompleted(opRslt: ibas.IOperationResult<bo.Document>): void {
@@ -149,7 +149,7 @@ export class DocumentListApp extends ibas.BOListApplication<IDocumentListView, b
                                             // 处理完成
                                             that.busy(false);
                                             that.messages(ibas.emMessageType.SUCCESS,
-                                            ibas.i18n.prop("sys_shell_data_delete") + ibas.i18n.prop("sys_shell_sucessful"));
+                                                ibas.i18n.prop("sys_shell_data_delete") + ibas.i18n.prop("sys_shell_sucessful"));
                                         }
                                     } catch (error) {
                                         that.messages(ibas.emMessageType.ERROR,

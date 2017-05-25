@@ -23,13 +23,14 @@ import {
 } from "ibas/index";
 import {
     IDocument,
+    BO_CODE_DOCUMENT,
 } from "../../api/index";
 
 /** 文档 */
 export class Document extends BOSimple<Document> implements IDocument {
 
     /** 业务对象编码 */
-    static BUSINESS_OBJECT_CODE: string = "${Company}_DC_DOCUMENT";
+    static BUSINESS_OBJECT_CODE: string = BO_CODE_DOCUMENT;
     /** 构造函数 */
     constructor() {
         super();

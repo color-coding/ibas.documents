@@ -41,7 +41,7 @@ export class DocumentChooseApp extends ibas.BOChooseService<IDocumentChooseView,
     protected fetchData(criteria: ibas.ICriteria): void {
         try {
             this.busy(true);
-            let that = this;
+            let that: this = this;
             let boRepository: BORepositoryDocuments = new BORepositoryDocuments();
             boRepository.fetchDocument({
                 criteria: criteria,
@@ -77,7 +77,7 @@ export class DocumentChooseApp extends ibas.BOChooseService<IDocumentChooseView,
         // 关闭自身
         this.destroy();
         // 调用编辑应用
-        let app = new DocumentEditApp();
+        let app: DocumentEditApp = new DocumentEditApp();
         app.navigation = this.navigation;
         app.viewShower = this.viewShower;
         app.run();

@@ -12,4 +12,4 @@ export * from "./Document";
 // 注册业务对象到工厂
 import * as ibas from "ibas/index";
 import { Document } from "./Document";
-ibas.boFactory.register(Document);
+ibas.boFactory.register(Document.BUSINESS_OBJECT_CODE, Document);

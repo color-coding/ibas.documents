@@ -25,7 +25,7 @@ export class DocumentListView extends ibas.BOListView implements IDocumentListVi
     deleteDataEvent: Function;
     /** 绘制视图 */
     darw(): any {
-        let that = this;
+        let that: this = this;
         this.form = new sap.ui.layout.form.SimpleForm("");
         this.table = new sap.ui.table.Table("", {
             enableSelectAll: false,
@@ -152,10 +152,10 @@ export class DocumentListView extends ibas.BOListView implements IDocumentListVi
         let model: sap.ui.model.Model = this.table.getModel(undefined);
         if (!ibas.objects.isNull(model)) {
             // 已存在绑定数据，添加新的
-            let hDatas: bo.Document[] = (<any>model).getData();
-            if (!ibas.objects.isNull(hDatas) && hDatas instanceof Array) {
+            let hDatas: any = (<any>model).getData();
+            if (!ibas.objects.isNull(hDatas) && hDatas.rows instanceof Array) {
                 for (let item of datas) {
-                    hDatas.push(item);
+                    hDatas.rows.push(item);
                 }
                 model.refresh(false);
                 done = true;
@@ -163,7 +163,7 @@ export class DocumentListView extends ibas.BOListView implements IDocumentListVi
         }
         if (!done) {
             // 没有显示数据
-            this.table.setModel(new sap.ui.model.json.JSONModel({rows: datas}));
+            this.table.setModel(new sap.ui.model.json.JSONModel({ rows: datas }));
         }
         this.table.setBusy(false);
     }
@@ -173,8 +173,10 @@ export class DocumentListView extends ibas.BOListView implements IDocumentListVi
         super.query(criteria);
         this.lastCriteria = criteria;
         // 清除历史数据
-        this.table.setBusy(true);
-        this.table.setFirstVisibleRow(0);
-        this.table.setModel(null);
+        if (this.isDisplayed) {
+            this.table.setBusy(true);
+            this.table.setFirstVisibleRow(0);
+            this.table.setModel(null);
+        }
     }
 }
