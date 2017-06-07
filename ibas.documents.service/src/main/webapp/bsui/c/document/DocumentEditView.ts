@@ -30,39 +30,44 @@ export class DocumentEditView extends ibas.BOEditView implements IDocumentEditVi
                 new sap.ui.core.Title("", { text: ibas.i18n.prop("documents_basis_information") }),
                 new sap.m.Label("", { text: ibas.i18n.prop("bo_document_filename") }),
                 new sap.m.Input("", {
-                    value: "{/fileName}",
                     type: sap.m.InputType.Text
+                }).bindProperty("value", {
+                    path: "/fileName"
                 }),
                 new sap.m.Label("", { text: ibas.i18n.prop("bo_document_tags") }),
                 new sap.m.Input("", {
-                    value: "{/tags}",
                     type: sap.m.InputType.Text
+                }).bindProperty("value", {
+                    path: "/tags"
                 }),
                 new sap.m.Label("", { text: ibas.i18n.prop("bo_document_activated") }),
                 new sap.m.Select("", {
                     items: utils.createComboBoxItems(ibas.emYesNo)
                 }).bindProperty("selectedKey", {
-                    path: "{/activated}",
+                    path: "/activated",
                     type: "sap.ui.model.type.Integer"
                 }),
                 new sap.ui.core.Title("", { text: ibas.i18n.prop("documents_other_information") }),
                 new sap.m.Label("", { text: ibas.i18n.prop("bo_document_objectkey") }),
                 new sap.m.Input("", {
-                    value: "{/objectKey}",
                     enabled: false,
                     type: sap.m.InputType.Text
+                }).bindProperty("value", {
+                    path: "/objectKey",
                 }),
                 new sap.m.Label("", { text: ibas.i18n.prop("bo_document_objectcode") }),
                 new sap.m.Input("", {
-                    value: "{/objectCode}",
                     enabled: false,
                     type: sap.m.InputType.Text
+                }).bindProperty("value", {
+                    path: "/objectCode",
                 }),
                 new sap.m.Label("", { text: ibas.i18n.prop("bo_document_filesign") }),
                 new sap.m.Input("", {
-                    value: "{/fileSign}",
                     enabled: false,
                     type: sap.m.InputType.Text
+                }).bindProperty("value", {
+                    path: "/fileSign",
                 }),
             ]
         });
