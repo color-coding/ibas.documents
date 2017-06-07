@@ -19,12 +19,51 @@ export class DocumentEditView extends ibas.BOEditView implements IDocumentEditVi
     deleteDataEvent: Function;
     /** 新建数据事件，参数1：是否克隆 */
     createDataEvent: Function;
+    /** 上传文件 */
+    uploadFileEvent: Function;
 
     /** 绘制视图 */
     darw(): any {
         let that: this = this;
         this.form = new sap.ui.layout.form.SimpleForm("", {
             content: [
+                new sap.ui.core.Title("", { text: ibas.i18n.prop("documents_basis_information") }),
+                new sap.m.Label("", { text: ibas.i18n.prop("bo_document_filename") }),
+                new sap.m.Input("", {
+                    value: "{/fileName}",
+                    type: sap.m.InputType.Text
+                }),
+                new sap.m.Label("", { text: ibas.i18n.prop("bo_document_tags") }),
+                new sap.m.Input("", {
+                    value: "{/tags}",
+                    type: sap.m.InputType.Text
+                }),
+                new sap.m.Label("", { text: ibas.i18n.prop("bo_document_activated") }),
+                new sap.m.Select("", {
+                    items: utils.createComboBoxItems(ibas.emYesNo)
+                }).bindProperty("selectedKey", {
+                    path: "{/activated}",
+                    type: "sap.ui.model.type.Integer"
+                }),
+                new sap.ui.core.Title("", { text: ibas.i18n.prop("documents_other_information") }),
+                new sap.m.Label("", { text: ibas.i18n.prop("bo_document_objectkey") }),
+                new sap.m.Input("", {
+                    value: "{/objectKey}",
+                    enabled: false,
+                    type: sap.m.InputType.Text
+                }),
+                new sap.m.Label("", { text: ibas.i18n.prop("bo_document_objectcode") }),
+                new sap.m.Input("", {
+                    value: "{/objectCode}",
+                    enabled: false,
+                    type: sap.m.InputType.Text
+                }),
+                new sap.m.Label("", { text: ibas.i18n.prop("bo_document_filesign") }),
+                new sap.m.Input("", {
+                    value: "{/fileSign}",
+                    enabled: false,
+                    type: sap.m.InputType.Text
+                }),
             ]
         });
         this.page = new sap.m.Page("", {
@@ -48,6 +87,15 @@ export class DocumentEditView extends ibas.BOEditView implements IDocumentEditVi
                         }
                     }),
                     new sap.m.ToolbarSeparator(""),
+                    new sap.m.Button("", {
+                        text: ibas.i18n.prop("documents_upload_file"),
+                        type: sap.m.ButtonType.Transparent,
+                        icon: "sap-icon://upload",
+                        press: function (): void {
+                            that.fireViewEvents(that.uploadFileEvent);
+                        }
+                    }),
+                    /*
                     new sap.m.MenuButton("", {
                         text: ibas.i18n.prop("sys_shell_data_new"),
                         type: sap.m.ButtonType.Transparent,
@@ -82,6 +130,7 @@ export class DocumentEditView extends ibas.BOEditView implements IDocumentEditVi
                             }
                         })
                     }),
+                    */
                 ]
             }),
             content: [this.form]

@@ -33,6 +33,49 @@ export class DocumentListView extends ibas.BOListView implements IDocumentListVi
             visibleRowCountMode: sap.ui.table.VisibleRowCountMode.Interactive,
             rows: "{/rows}",
             columns: [
+                new sap.ui.table.Column("", {
+                    label: ibas.i18n.prop("bo_document_objectkey"),
+                    template: new sap.m.Text("", {
+                        wrapping: false
+                    }).bindProperty("text", {
+                        path: "objectKey"
+                    })
+                }),
+                new sap.ui.table.Column("", {
+                    label: ibas.i18n.prop("bo_document_dataowner"),
+                    template: new sap.m.Text("", {
+                        wrapping: false
+                    }).bindProperty("text", {
+                        path: "dataOwner"
+                    })
+                }),
+                new sap.ui.table.Column("", {
+                    label: ibas.i18n.prop("bo_document_activated"),
+                    template: new sap.m.Text("", {
+                        wrapping: false
+                    }).bindProperty("text", {
+                        path: "activated",
+                        formatter(data: any): any {
+                            return ibas.enums.describe(ibas.emYesNo, data);
+                        }
+                    })
+                }),
+                new sap.ui.table.Column("", {
+                    label: ibas.i18n.prop("bo_document_filename"),
+                    template: new sap.m.Text("", {
+                        wrapping: false
+                    }).bindProperty("text", {
+                        path: "fileName"
+                    })
+                }),
+                new sap.ui.table.Column("", {
+                    label: ibas.i18n.prop("bo_document_tags"),
+                    template: new sap.m.Text("", {
+                        wrapping: false
+                    }).bindProperty("text", {
+                        path: "tags"
+                    })
+                }),
             ]
         });
         this.form.addContent(this.table);
@@ -48,6 +91,7 @@ export class DocumentListView extends ibas.BOListView implements IDocumentListVi
                             that.fireViewEvents(that.newDataEvent);
                         }
                     }),
+                    /*
                     new sap.m.Button("", {
                         text: ibas.i18n.prop("sys_shell_data_view"),
                         type: sap.m.ButtonType.Transparent,
@@ -59,7 +103,7 @@ export class DocumentListView extends ibas.BOListView implements IDocumentListVi
                             );
                         }
                     }),
-                    /*
+                    */
                     new sap.m.Button("", {
                         text: ibas.i18n.prop("sys_shell_data_edit"),
                         type: sap.m.ButtonType.Transparent,
@@ -71,7 +115,6 @@ export class DocumentListView extends ibas.BOListView implements IDocumentListVi
                             );
                         }
                     }),
-                    */
                     // new sap.m.ToolbarSeparator(""),// 加了后面不显示？
                     new sap.m.Button("", {
                         text: ibas.i18n.prop("sys_shell_data_delete"),
