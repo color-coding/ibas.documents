@@ -9,6 +9,7 @@
 import * as ibas from "ibas/index";
 import * as bo from "../../borep/bo/index";
 import { BORepositoryDocuments } from "../../borep/BORepositories";
+import { DataConverter4dc } from "../../borep/DataConverters";
 import { DocumentViewApp } from "./DocumentViewApp";
 import { DocumentEditApp } from "./DocumentEditApp";
 
@@ -168,7 +169,12 @@ export class DocumentListApp extends ibas.BOListApplication<IDocumentListView, b
     }
     /** 获取服务的契约 */
     protected getServiceProxies(): ibas.IServiceProxy<ibas.IServiceContract>[] {
-        return [];
+        return [
+            new ibas.BOListServiceProxy({
+                data: this.view.getSelecteds(),
+                converter: new DataConverter4dc(),
+            })
+        ];
     }
 }
 /** 视图-文档 */
@@ -179,4 +185,6 @@ export interface IDocumentListView extends ibas.IBOListView {
     deleteDataEvent: Function;
     /** 显示数据 */
     showData(datas: bo.Document[]): void;
+    /** 获取选择的数据 */
+    getSelecteds(): bo.Document[];
 }

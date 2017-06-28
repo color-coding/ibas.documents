@@ -222,4 +222,8 @@ export class DocumentListView extends ibas.BOListView implements IDocumentListVi
             this.table.setModel(null);
         }
     }
+    /** 获取选择的数据 */
+    getSelecteds(): bo.Document[] {
+        return utils.getTableSelecteds<bo.Document>(this.table);
+    }
 }
