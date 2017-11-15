@@ -12,3 +12,4 @@ export * from "./DocumentListApp";
 export * from "./DocumentChooseApp";
 export * from "./DocumentViewApp";
 export * from "./DocumentEditApp";
+export * from "./BODocumentService";

@@ -11,3 +11,4 @@ export * from "./DocumentListView";
 export * from "./DocumentChooseView";
 export * from "./DocumentViewView";
 export * from "./DocumentEditView";
+export * from "./BODocumentServiceView";

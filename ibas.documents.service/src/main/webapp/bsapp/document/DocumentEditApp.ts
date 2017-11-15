@@ -220,7 +220,7 @@ export class DocumentEditApp extends ibas.BOEditApplication<IDocumentEditView, b
                 }
             }
         });
-        this.proceeding(ibas.emMessageType.INFORMATION, ibas.i18n.prop("sys_shell_uploading_file"));
+        this.proceeding(ibas.emMessageType.INFORMATION, ibas.i18n.prop("sys_shell_downloading_file"));
     }
 }
 /** 视图-文档 */

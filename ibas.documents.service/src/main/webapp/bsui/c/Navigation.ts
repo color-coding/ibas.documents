@@ -34,6 +34,9 @@ export default class Navigation extends ibas.ViewNavigation {
             case documentApps.DocumentEditApp.APPLICATION_ID:
                 view = new documentViews.DocumentEditView();
                 break;
+            case documentApps.BODocumentService.APPLICATION_ID:
+                view = new documentViews.BODocumentServiceView();
+                break;
             default:
                 break;
         }

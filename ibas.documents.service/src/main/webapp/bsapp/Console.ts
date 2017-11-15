@@ -7,7 +7,10 @@
  */
 
 import * as ibas from "ibas/index";
-import { DocumentFunc, DocumentChooseServiceMapping, DocumentLinkServiceMapping } from "./document/index";
+import {
+    DocumentFunc, DocumentChooseServiceMapping, DocumentLinkServiceMapping,
+    BODocumentServiceMapping, BOListDocumentServiceMapping,
+} from "./document/index";
 
 /** 模块控制台 */
 export class Console extends ibas.ModuleConsole {
@@ -33,6 +36,8 @@ export class Console extends ibas.ModuleConsole {
         // 注册服务应用
         this.register(new DocumentChooseServiceMapping());
         this.register(new DocumentLinkServiceMapping());
+        this.register(new BODocumentServiceMapping());
+        this.register(new BOListDocumentServiceMapping());
         // 注册常驻应用
 
     }

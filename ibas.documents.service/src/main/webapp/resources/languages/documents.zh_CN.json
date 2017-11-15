@@ -13,5 +13,7 @@
   "documents_download_file": "下载文件",
   "documents_not_found_file": "没有找到文件[{0}]",
   "documents_unrecognized_document": "无法识别的文档，请下载浏览",
+  "documents_bo_document_service": "文档服务",
+  "documents_bo_document_icon": "sap-icon://documents",
   "documents_closing_delimiter": "----结束----"
 }
