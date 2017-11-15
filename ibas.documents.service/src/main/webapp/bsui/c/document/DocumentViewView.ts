@@ -43,38 +43,6 @@ export class DocumentViewView extends ibas.BOViewView implements IDocumentViewVi
                         }
                     }),
                 ],
-                contentRight: [
-                    new sap.m.Button("", {
-                        type: sap.m.ButtonType.Transparent,
-                        icon: "sap-icon://action",
-                        press: function (event: any): void {
-                            that.fireViewEvents(that.callServicesEvent, {
-                                displayServices(services: ibas.IServiceAgent[]): void {
-                                    if (ibas.objects.isNull(services) || services.length === 0) {
-                                        return;
-                                    }
-                                    let popover: sap.m.Popover = new sap.m.Popover("", {
-                                        showHeader: false,
-                                        placement: sap.m.PlacementType.Bottom,
-                                    });
-                                    for (let service of services) {
-                                        popover.addContent(new sap.m.Button({
-                                            text: ibas.i18n.prop(service.name),
-                                            type: sap.m.ButtonType.Transparent,
-                                            icon: service.icon,
-                                            press: function (): void {
-                                                service.run();
-                                                popover.close();
-                                            }
-                                        }));
-                                    }
-                                    (<any>popover).addStyleClass("sapMOTAPopover sapTntToolHeaderPopover");
-                                    popover.openBy(event.getSource(), true);
-                                }
-                            });
-                        }
-                    })
-                ]
             }),
         });
         this.id = this.page.getId();
@@ -86,12 +54,49 @@ export class DocumentViewView extends ibas.BOViewView implements IDocumentViewVi
     showDocument(data: bo.Document): void {
         this.page.setTitle(ibas.strings.format("{0} - {1}", this.page.getTitle(), data.fileName));
         if (data.fileName.toLowerCase().endsWith(".pdf")) {
+            let criteria: ibas.ICriteria = new ibas.Criteria();
+            let condition: ibas.ICondition = criteria.conditions.create();
+            condition.alias = ibas.CRITERIA_CONDITION_ALIAS_FILE_NAME;
+            condition.value = data.fileSign;
+            let that: this = this;
             let boRepository: BORepositoryDocuments = new BORepositoryDocuments();
-            let url: string = boRepository.toUrl(data);
-            this.page.addContent(new sap.m.PDFViewer("", {
-                showDownloadButton: false,
-                source: url
-            }));
+            boRepository.download({
+                criteria: criteria,
+                onCompleted(opRslt: ibas.IOperationResult<Blob>): void {
+                    let blob: Blob = opRslt.resultObjects.firstOrDefault();
+                    if (!ibas.objects.isNull(blob)) {
+                        let fileReader: FileReader = new FileReader();
+                        fileReader.onload = function (e: ProgressEvent): void {
+                            let dataUrl: string = (<any>e.target).result;
+                            let datas: string[] = dataUrl.split(","),
+                                mime: string = "data:application/pdf",
+                                // atob() 函数用来解码一个已经被base-64编码过的数据
+                                decodedDatas: string = atob(datas[1]),
+                                length: number = decodedDatas.length,
+                                uint8Array: Uint8Array = new Uint8Array(length);
+                            while (length--) {
+                                uint8Array[length] = decodedDatas.charCodeAt(length);
+                            }
+                            let newBlob: Blob = new Blob([uint8Array], { type: mime });
+                            // 成功获取
+                            let url: string = window.URL.createObjectURL(newBlob);
+                            that.page.addContent(new sap.m.PDFViewer("", {
+                                showDownloadButton: false,
+                                source: url
+                            }));
+                        };
+                        fileReader.readAsDataURL(blob);
+                    } else {
+                        that.page.addContent(new sap.m.MessagePage("", {
+                            text: ibas.i18n.prop("documents_not_found_file", data.fileName),
+                            description: "",
+                            showHeader: false,
+                            showNavButton: false,
+                            textDirection: sap.ui.core.TextDirection.Inherit
+                        }));
+                    }
+                }
+            });
         } else {
             this.page.addContent(new sap.m.MessagePage("", {
                 text: ibas.i18n.prop("documents_unrecognized_document"),

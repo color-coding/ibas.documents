@@ -11,6 +11,7 @@
   "documents_whether_upload_file": "是否上传文件",
   "documents_view_file": "查看文件",
   "documents_download_file": "下载文件",
+  "documents_not_found_file": "没有找到文件[{0}]",
   "documents_unrecognized_document": "无法识别的文档，请下载浏览",
   "documents_closing_delimiter": "----结束----"
 }
