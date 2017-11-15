@@ -102,7 +102,7 @@ public class FileService extends FileRepositoryService {
 	@Path("{document}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_OCTET_STREAM)
-	public byte[] loadReport(@PathParam("document") String document, @QueryParam("token") String token,
+	public byte[] document(@PathParam("document") String document, @QueryParam("token") String token,
 			@Context HttpServletResponse response) {
 		Criteria criteria = new Criteria();
 		ICondition condition = criteria.getConditions().create();

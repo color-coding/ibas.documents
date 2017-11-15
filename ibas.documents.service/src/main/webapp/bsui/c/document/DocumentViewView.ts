@@ -10,19 +10,18 @@ import * as ibas from "ibas/index";
 import * as openui5 from "openui5/index";
 import * as bo from "../../../borep/bo/index";
 import { IDocumentViewView } from "../../../bsapp/document/index";
+import { BORepositoryDocuments } from "borep/BORepositories";
 
 /**
  * 视图-Document
  */
 export class DocumentViewView extends ibas.BOViewView implements IDocumentViewView {
 
+    /** 下载文件 */
+    downloadFileEvent: Function;
     /** 绘制视图 */
     darw(): any {
         let that: this = this;
-        this.form = new sap.ui.layout.form.SimpleForm("", {
-            content: [
-            ]
-        });
         this.page = new sap.m.Page("", {
             showHeader: false,
             subHeader: new sap.m.Bar("", {
@@ -34,7 +33,15 @@ export class DocumentViewView extends ibas.BOViewView implements IDocumentViewVi
                         press: function (): void {
                             that.fireViewEvents(that.editDataEvent);
                         }
-                    })
+                    }),
+                    new sap.m.Button("", {
+                        text: ibas.i18n.prop("documents_download_file"),
+                        type: sap.m.ButtonType.Transparent,
+                        icon: "sap-icon://download",
+                        press: function (): void {
+                            that.fireViewEvents(that.downloadFileEvent);
+                        }
+                    }),
                 ],
                 contentRight: [
                     new sap.m.Button("", {
@@ -69,16 +76,30 @@ export class DocumentViewView extends ibas.BOViewView implements IDocumentViewVi
                     })
                 ]
             }),
-            content: [this.form]
         });
         this.id = this.page.getId();
         return this.page;
     }
     private page: sap.m.Page;
-    private form: sap.ui.layout.form.SimpleForm;
 
     /** 显示数据 */
     showDocument(data: bo.Document): void {
-        this.form.setModel(new sap.ui.model.json.JSONModel(data));
+        this.page.setTitle(ibas.strings.format("{0} - {1}", this.page.getTitle(), data.fileName));
+        if (data.fileName.toLowerCase().endsWith(".pdf")) {
+            let boRepository: BORepositoryDocuments = new BORepositoryDocuments();
+            let url: string = boRepository.toUrl(data);
+            this.page.addContent(new sap.m.PDFViewer("", {
+                showDownloadButton: false,
+                source: url
+            }));
+        } else {
+            this.page.addContent(new sap.m.MessagePage("", {
+                text: ibas.i18n.prop("documents_unrecognized_document"),
+                description: "",
+                showHeader: false,
+                showNavButton: false,
+                textDirection: sap.ui.core.TextDirection.Inherit
+            }));
+        }
     }
 }

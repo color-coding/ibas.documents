@@ -315,6 +315,7 @@ export class Document extends BOSimple<Document> implements IDocument {
     /** 初始化数据 */
     protected init(): void {
         this.objectCode = config.applyVariables(Document.BUSINESS_OBJECT_CODE);
+        this.activated = emYesNo.YES;
     }
 }
 

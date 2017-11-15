@@ -33,10 +33,12 @@ export class DocumentViewApp extends ibas.BOViewService<IDocumentViewView> {
         super.registerView();
         // 其他事件
         this.view.editDataEvent = this.editData;
+        this.view.downloadFileEvent = this.downloadFile;
     }
     /** 视图显示后 */
     protected viewShowed(): void {
         // 视图加载完成
+        this.view.showDocument(this.viewData);
     }
     /** 编辑数据，参数：目标数据 */
     protected editData(): void {
@@ -81,6 +83,34 @@ export class DocumentViewApp extends ibas.BOViewService<IDocumentViewView> {
         });
         this.proceeding(ibas.emMessageType.INFORMATION, ibas.i18n.prop("sys_shell_fetching_data"));
     }
+    /** 下载文件 */
+    downloadFile(): void {
+        this.busy(true);
+        let criteria: ibas.ICriteria = new ibas.Criteria();
+        let condition: ibas.ICondition = criteria.conditions.create();
+        condition.alias = ibas.CRITERIA_CONDITION_ALIAS_FILE_NAME;
+        condition.value = this.viewData.fileSign;
+        let that: this = this;
+        let boRepository: BORepositoryDocuments = new BORepositoryDocuments();
+        boRepository.download({
+            criteria: criteria,
+            onCompleted(opRslt: ibas.IOperationResult<Blob>): void {
+                try {
+                    that.busy(false);
+                    if (opRslt.resultCode !== 0) {
+                        throw new Error(opRslt.message);
+                    }
+                    let data: Blob = opRslt.resultObjects.firstOrDefault();
+                    if (!ibas.objects.isNull(data)) {
+                        ibas.files.save(data, that.viewData.fileName);
+                    }
+                } catch (error) {
+                    that.messages(error);
+                }
+            }
+        });
+        this.proceeding(ibas.emMessageType.INFORMATION, ibas.i18n.prop("sys_shell_uploading_file"));
+    }
     /** 获取服务的契约 */
     protected getServiceProxies(): ibas.IServiceProxy<ibas.IServiceContract>[] {
         return [];
@@ -88,7 +118,10 @@ export class DocumentViewApp extends ibas.BOViewService<IDocumentViewView> {
 }
 /** 视图-文档 */
 export interface IDocumentViewView extends ibas.IBOViewView {
-
+    /** 显示数据 */
+    showDocument(data: bo.Document): void;
+    /** 下载文件 */
+    downloadFileEvent: Function;
 }
 /** 文档连接服务映射 */
 export class DocumentLinkServiceMapping extends ibas.BOLinkServiceMapping {

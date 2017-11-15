@@ -19,7 +19,15 @@ export class BORepositoryDocuments extends ibas.BORepositoryApplication implemen
     protected createConverter(): ibas.IDataConverter {
         return new DataConverter4dc;
     }
-
+    /**
+     * 获取地址
+     */
+    toUrl(document: bo.Document): string {
+        if (!this.address.endsWith("/")) { this.address += "/"; }
+        let url: string = this.address.replace("/services/rest/data/", "/services/rest/file/");
+        url += ibas.strings.format("{0}?token={1}", document.fileSign, this.token);
+        return encodeURI(url);
+    }
     /**
      * 上传文档
      * @param caller 调用者

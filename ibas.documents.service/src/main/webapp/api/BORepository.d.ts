@@ -19,6 +19,10 @@ import * as bo from "./bo/index"
 export interface IBORepositoryDocuments {
 
     /**
+     * 获取地址
+     */
+    toUrl(document: bo.IDocument): string;
+    /**
      * 上传文档
      * @param caller 调用者
      */
