@@ -233,39 +233,6 @@ export class Document extends BOSimple<Document> implements IDocument {
         this.setProperty(Document.PROPERTY_ACTIVATED_NAME, value);
     }
 
-    /** 映射的属性名称-参考1 */
-    static PROPERTY_REFERENCE1_NAME: string = "Reference1";
-    /** 获取-参考1 */
-    get reference1(): string {
-        return this.getProperty<string>(Document.PROPERTY_REFERENCE1_NAME);
-    }
-    /** 设置-参考1 */
-    set reference1(value: string) {
-        this.setProperty(Document.PROPERTY_REFERENCE1_NAME, value);
-    }
-
-    /** 映射的属性名称-参考2 */
-    static PROPERTY_REFERENCE2_NAME: string = "Reference2";
-    /** 获取-参考2 */
-    get reference2(): string {
-        return this.getProperty<string>(Document.PROPERTY_REFERENCE2_NAME);
-    }
-    /** 设置-参考2 */
-    set reference2(value: string) {
-        this.setProperty(Document.PROPERTY_REFERENCE2_NAME, value);
-    }
-
-    /** 映射的属性名称-备注 */
-    static PROPERTY_REMARKS_NAME: string = "Remarks";
-    /** 获取-备注 */
-    get remarks(): string {
-        return this.getProperty<string>(Document.PROPERTY_REMARKS_NAME);
-    }
-    /** 设置-备注 */
-    set remarks(value: string) {
-        this.setProperty(Document.PROPERTY_REMARKS_NAME, value);
-    }
-
     /** 映射的属性名称-文件标识 */
     static PROPERTY_FILESIGN_NAME: string = "FileSign";
     /** 获取-文件标识 */
@@ -288,6 +255,17 @@ export class Document extends BOSimple<Document> implements IDocument {
         this.setProperty(Document.PROPERTY_FILENAME_NAME, value);
     }
 
+    /** 映射的属性名称-版本 */
+    static PROPERTY_VERSION_NAME: string = "Version";
+    /** 获取-版本 */
+    get version(): string {
+        return this.getProperty<string>(Document.PROPERTY_VERSION_NAME);
+    }
+    /** 设置-版本 */
+    set version(value: string) {
+        this.setProperty(Document.PROPERTY_VERSION_NAME, value);
+    }
+
     /** 映射的属性名称-标签 */
     static PROPERTY_TAGS_NAME: string = "Tags";
     /** 获取-标签 */
@@ -299,12 +277,45 @@ export class Document extends BOSimple<Document> implements IDocument {
         this.setProperty(Document.PROPERTY_TAGS_NAME, value);
     }
 
+    /** 映射的属性名称-业务对象标识 */
+    static PROPERTY_BOKEYS_NAME: string = "BOKeys";
+    /** 获取-业务对象标识 */
+    get boKeys(): string {
+        return this.getProperty<string>(Document.PROPERTY_BOKEYS_NAME);
+    }
+    /** 设置-业务对象标识 */
+    set boKeys(value: string) {
+        this.setProperty(Document.PROPERTY_BOKEYS_NAME, value);
+    }
+
+    /** 映射的属性名称-参考1 */
+    static PROPERTY_REFERENCE1_NAME: string = "Reference1";
+    /** 获取-参考1 */
+    get reference1(): string {
+        return this.getProperty<string>(Document.PROPERTY_REFERENCE1_NAME);
+    }
+    /** 设置-参考1 */
+    set reference1(value: string) {
+        this.setProperty(Document.PROPERTY_REFERENCE1_NAME, value);
+    }
+
+    /** 映射的属性名称-参考2 */
+    static PROPERTY_REFERENCE2_NAME: string = "Reference2";
+    /** 获取-参考2 */
+    get reference2(): string {
+        return this.getProperty<string>(Document.PROPERTY_REFERENCE2_NAME);
+    }
+    /** 设置-参考2 */
+    set reference2(value: string) {
+        this.setProperty(Document.PROPERTY_REFERENCE2_NAME, value);
+    }
+
 
 
     /** 初始化数据 */
     protected init(): void {
         this.objectCode = config.applyVariables(Document.BUSINESS_OBJECT_CODE);
-        this.activated = emYesNo.YES;
     }
 }
+
 

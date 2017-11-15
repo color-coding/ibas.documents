@@ -69,11 +69,11 @@ export class DocumentChooseView extends ibas.BOChooseView implements IDocumentCh
                     })
                 }),
                 new sap.ui.table.Column("", {
-                    label: ibas.i18n.prop("bo_document_dataowner"),
+                    label: ibas.i18n.prop("bo_document_filename"),
                     template: new sap.m.Text("", {
                         wrapping: false
                     }).bindProperty("text", {
-                        path: "dataOwner"
+                        path: "fileName"
                     })
                 }),
                 new sap.ui.table.Column("", {
@@ -88,11 +88,19 @@ export class DocumentChooseView extends ibas.BOChooseView implements IDocumentCh
                     })
                 }),
                 new sap.ui.table.Column("", {
-                    label: ibas.i18n.prop("bo_document_filename"),
+                    label: ibas.i18n.prop("bo_document_version"),
                     template: new sap.m.Text("", {
                         wrapping: false
                     }).bindProperty("text", {
-                        path: "fileName"
+                        path: "version"
+                    })
+                }),
+                new sap.ui.table.Column("", {
+                    label: ibas.i18n.prop("bo_document_bokeys"),
+                    template: new sap.m.Text("", {
+                        wrapping: false
+                    }).bindProperty("text", {
+                        path: "boKeys"
                     })
                 }),
                 new sap.ui.table.Column("", {
@@ -101,6 +109,22 @@ export class DocumentChooseView extends ibas.BOChooseView implements IDocumentCh
                         wrapping: false
                     }).bindProperty("text", {
                         path: "tags"
+                    })
+                }),
+                new sap.ui.table.Column("", {
+                    label: ibas.i18n.prop("bo_document_reference1"),
+                    template: new sap.m.Text("", {
+                        wrapping: false
+                    }).bindProperty("text", {
+                        path: "reference1"
+                    })
+                }),
+                new sap.ui.table.Column("", {
+                    label: ibas.i18n.prop("bo_document_reference2"),
+                    template: new sap.m.Text("", {
+                        wrapping: false
+                    }).bindProperty("text", {
+                        path: "reference2"
                     })
                 }),
             ]

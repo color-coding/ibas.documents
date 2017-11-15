@@ -10,6 +10,7 @@ import * as ibas from "ibas/index";
 import * as bo from "./bo/index";
 import { IBORepositoryDocuments, BO_REPOSITORY_DOCUMENTS } from "../api/index";
 import { DataConverter4dc } from "./DataConverters";
+import { FileData } from "ibas/index";
 
 /** Documents 业务仓库 */
 export class BORepositoryDocuments extends ibas.BORepositoryApplication implements IBORepositoryDocuments {
@@ -19,6 +20,30 @@ export class BORepositoryDocuments extends ibas.BORepositoryApplication implemen
         return new DataConverter4dc;
     }
 
+    /**
+     * 上传文档
+     * @param caller 调用者
+     */
+    upload(caller: ibas.UploadFileCaller<FileData>): void {
+        if (!this.address.endsWith("/")) { this.address += "/"; }
+        let fileRepository: ibas.FileRepositoryUploadAjax = new ibas.FileRepositoryUploadAjax();
+        fileRepository.address = this.address.replace("/services/rest/data/", "/services/rest/file/");
+        fileRepository.token = this.token;
+        fileRepository.converter = this.createConverter();
+        fileRepository.upload("upload", caller);
+    }
+    /**
+     * 下载文档
+     * @param caller 调用者
+     */
+    download(caller: ibas.DownloadFileCaller<Blob>): void {
+        if (!this.address.endsWith("/")) { this.address += "/"; }
+        let fileRepository: ibas.FileRepositoryDownloadAjax = new ibas.FileRepositoryDownloadAjax();
+        fileRepository.address = this.address.replace("/services/rest/data/", "/services/rest/file/");
+        fileRepository.token = this.token;
+        fileRepository.converter = this.createConverter();
+        fileRepository.download("download", caller);
+    }
     /**
      * 查询 文档
      * @param fetcher 查询者

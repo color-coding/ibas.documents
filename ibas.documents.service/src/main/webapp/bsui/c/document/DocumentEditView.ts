@@ -21,6 +21,8 @@ export class DocumentEditView extends ibas.BOEditView implements IDocumentEditVi
     createDataEvent: Function;
     /** 上传文件 */
     uploadFileEvent: Function;
+    /** 下载文件 */
+    downloadFileEvent: Function;
 
     /** 绘制视图 */
     darw(): any {
@@ -29,10 +31,41 @@ export class DocumentEditView extends ibas.BOEditView implements IDocumentEditVi
             content: [
                 new sap.ui.core.Title("", { text: ibas.i18n.prop("documents_basis_information") }),
                 new sap.m.Label("", { text: ibas.i18n.prop("bo_document_filename") }),
+                new sap.ui.unified.FileUploader("", {
+                    name: "file",
+                    width: "100%",
+                    placeholder: ibas.i18n.prop("sys_shell_browse"),
+                    change(event: sap.ui.base.Event): void {
+                        if (ibas.objects.isNull(event.getParameters())
+                            || ibas.objects.isNull(event.getParameters().files)
+                            || event.getParameters().files.length === 0) {
+                            return;
+                        }
+                        let fileData: FormData = new FormData();
+                        fileData.append("file", event.getParameters().files[0]);
+                        fileData.append("name", event.getParameters().newValue);
+                        that.application.viewShower.messages({
+                            type: ibas.emMessageType.QUESTION,
+                            actions: [
+                                ibas.emMessageAction.YES,
+                                ibas.emMessageAction.NO
+                            ],
+                            message: ibas.i18n.prop("documents_whether_upload_file"),
+                            onCompleted(action: ibas.emMessageAction): void {
+                                if (action === ibas.emMessageAction.YES) {
+                                    that.fireViewEvents(that.uploadFileEvent, fileData);
+                                }
+                            }
+                        });
+                    }
+                }).bindProperty("value", {
+                    path: "/fileName"
+                }),
+                new sap.m.Label("", { text: ibas.i18n.prop("bo_document_version") }),
                 new sap.m.Input("", {
                     type: sap.m.InputType.Text
                 }).bindProperty("value", {
-                    path: "/fileName"
+                    path: "/version"
                 }),
                 new sap.m.Label("", { text: ibas.i18n.prop("bo_document_tags") }),
                 new sap.m.Input("", {
@@ -46,6 +79,18 @@ export class DocumentEditView extends ibas.BOEditView implements IDocumentEditVi
                 }).bindProperty("selectedKey", {
                     path: "/activated",
                     type: "sap.ui.model.type.Integer"
+                }),
+                new sap.m.Label("", { text: ibas.i18n.prop("bo_document_reference1") }),
+                new sap.m.Input("", {
+                    type: sap.m.InputType.Text
+                }).bindProperty("value", {
+                    path: "/reference1"
+                }),
+                new sap.m.Label("", { text: ibas.i18n.prop("bo_document_reference2") }),
+                new sap.m.Input("", {
+                    type: sap.m.InputType.Text
+                }).bindProperty("value", {
+                    path: "/reference2"
                 }),
                 new sap.ui.core.Title("", { text: ibas.i18n.prop("documents_other_information") }),
                 new sap.m.Label("", { text: ibas.i18n.prop("bo_document_objectkey") }),
@@ -68,6 +113,13 @@ export class DocumentEditView extends ibas.BOEditView implements IDocumentEditVi
                     type: sap.m.InputType.Text
                 }).bindProperty("value", {
                     path: "/fileSign",
+                }),
+                new sap.m.Label("", { text: ibas.i18n.prop("bo_document_bokeys") }),
+                new sap.m.Input("", {
+                    enabled: false,
+                    type: sap.m.InputType.Text
+                }).bindProperty("value", {
+                    path: "/boKeys",
                 }),
             ]
         });
@@ -93,11 +145,11 @@ export class DocumentEditView extends ibas.BOEditView implements IDocumentEditVi
                     }),
                     new sap.m.ToolbarSeparator(""),
                     new sap.m.Button("", {
-                        text: ibas.i18n.prop("documents_upload_file"),
+                        text: ibas.i18n.prop("documents_download_file"),
                         type: sap.m.ButtonType.Transparent,
-                        icon: "sap-icon://upload",
+                        icon: "sap-icon://download",
                         press: function (): void {
-                            that.fireViewEvents(that.uploadFileEvent);
+                            that.fireViewEvents(that.downloadFileEvent);
                         }
                     }),
                     /*

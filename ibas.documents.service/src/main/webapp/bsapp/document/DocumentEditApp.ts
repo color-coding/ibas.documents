@@ -33,6 +33,8 @@ export class DocumentEditApp extends ibas.BOEditApplication<IDocumentEditView, b
         // 其他事件
         this.view.deleteDataEvent = this.deleteData;
         this.view.createDataEvent = this.createData;
+        this.view.uploadFileEvent = this.uploadFile;
+        this.view.downloadFileEvent = this.downloadFile;
     }
     /** 视图显示后 */
     protected viewShowed(): void {
@@ -165,6 +167,61 @@ export class DocumentEditApp extends ibas.BOEditApplication<IDocumentEditView, b
             createData();
         }
     }
+    /** 上传文件 */
+    uploadFile(data: FormData): void {
+        this.busy(true);
+        let that: this = this;
+        let boRepository: BORepositoryDocuments = new BORepositoryDocuments();
+        boRepository.upload({
+            fileData: data,
+            onCompleted(opRslt: ibas.IOperationResult<ibas.FileData>): void {
+                try {
+                    that.busy(false);
+                    if (opRslt.resultCode !== 0) {
+                        throw new Error(opRslt.message);
+                    }
+                    let fileData: ibas.FileData = opRslt.resultObjects.firstOrDefault();
+                    if (!ibas.objects.isNull(fileData)) {
+                        that.editData.fileName = fileData.originalName;
+                        that.editData.fileSign = fileData.fileName;
+                        that.messages(ibas.emMessageType.SUCCESS,
+                            ibas.i18n.prop("sys_shell_upload") + ibas.i18n.prop("sys_shell_sucessful"));
+                    }
+                } catch (error) {
+                    that.messages(error);
+                }
+            }
+        });
+        this.proceeding(ibas.emMessageType.INFORMATION, ibas.i18n.prop("sys_shell_uploading_file"));
+    }
+    /** 下载文件 */
+    downloadFile(): void {
+        this.busy(true);
+        let criteria: ibas.ICriteria = new ibas.Criteria();
+        let condition: ibas.ICondition = criteria.conditions.create();
+        condition.alias = ibas.CRITERIA_CONDITION_ALIAS_FILE_NAME;
+        condition.value = this.editData.fileSign;
+        let that: this = this;
+        let boRepository: BORepositoryDocuments = new BORepositoryDocuments();
+        boRepository.download({
+            criteria: criteria,
+            onCompleted(opRslt: ibas.IOperationResult<Blob>): void {
+                try {
+                    that.busy(false);
+                    if (opRslt.resultCode !== 0) {
+                        throw new Error(opRslt.message);
+                    }
+                    let data: Blob = opRslt.resultObjects.firstOrDefault();
+                    if (!ibas.objects.isNull(data)) {
+                        ibas.files.save(data, that.editData.fileName);
+                    }
+                } catch (error) {
+                    that.messages(error);
+                }
+            }
+        });
+        this.proceeding(ibas.emMessageType.INFORMATION, ibas.i18n.prop("sys_shell_uploading_file"));
+    }
 }
 /** 视图-文档 */
 export interface IDocumentEditView extends ibas.IBOEditView {
@@ -174,4 +231,8 @@ export interface IDocumentEditView extends ibas.IBOEditView {
     deleteDataEvent: Function;
     /** 新建数据事件，参数1：是否克隆 */
     createDataEvent: Function;
+    /** 上传文件 */
+    uploadFileEvent: Function;
+    /** 下载文件 */
+    downloadFileEvent: Function;
 }

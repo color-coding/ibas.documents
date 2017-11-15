@@ -81,24 +81,28 @@ export interface IDocument extends IBOSimple {
     /** 已激活的 */
     activated: emYesNo;
 
-    /** 参考1 */
-    reference1: string;
-
-    /** 参考2 */
-    reference2: string;
-
-    /** 备注 */
-    remarks: string;
-
     /** 文件标识 */
     fileSign: string;
 
     /** 文件名称 */
     fileName: string;
 
+    /** 版本 */
+    version: string;
+
     /** 标签 */
     tags: string;
 
+    /** 业务对象标识 */
+    boKeys: string;
+
+    /** 参考1 */
+    reference1: string;
+
+    /** 参考2 */
+    reference2: string;
+
 
 }
+
 

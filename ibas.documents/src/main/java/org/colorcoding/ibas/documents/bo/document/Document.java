@@ -29,7 +29,7 @@ public class Document extends BusinessObject<Document> implements IDocument {
 	/**
 	 * 序列化版本标记
 	 */
-	private static final long serialVersionUID = -8181708817830397510L;
+	private static final long serialVersionUID = -4149128542191105018L;
 
 	/**
 	 * 当前类型
@@ -628,102 +628,6 @@ public class Document extends BusinessObject<Document> implements IDocument {
 	}
 
 	/**
-	 * 属性名称-参考1
-	 */
-	private static final String PROPERTY_REFERENCE1_NAME = "Reference1";
-
-	/**
-	 * 参考1 属性
-	 */
-	@DbField(name = "Ref1", type = DbFieldType.ALPHANUMERIC, table = DB_TABLE_NAME, primaryKey = false)
-	public static final IPropertyInfo<String> PROPERTY_REFERENCE1 = registerProperty(PROPERTY_REFERENCE1_NAME,
-			String.class, MY_CLASS);
-
-	/**
-	 * 获取-参考1
-	 * 
-	 * @return 值
-	 */
-	@XmlElement(name = PROPERTY_REFERENCE1_NAME)
-	public final String getReference1() {
-		return this.getProperty(PROPERTY_REFERENCE1);
-	}
-
-	/**
-	 * 设置-参考1
-	 * 
-	 * @param value
-	 *            值
-	 */
-	public final void setReference1(String value) {
-		this.setProperty(PROPERTY_REFERENCE1, value);
-	}
-
-	/**
-	 * 属性名称-参考2
-	 */
-	private static final String PROPERTY_REFERENCE2_NAME = "Reference2";
-
-	/**
-	 * 参考2 属性
-	 */
-	@DbField(name = "Ref2", type = DbFieldType.ALPHANUMERIC, table = DB_TABLE_NAME, primaryKey = false)
-	public static final IPropertyInfo<String> PROPERTY_REFERENCE2 = registerProperty(PROPERTY_REFERENCE2_NAME,
-			String.class, MY_CLASS);
-
-	/**
-	 * 获取-参考2
-	 * 
-	 * @return 值
-	 */
-	@XmlElement(name = PROPERTY_REFERENCE2_NAME)
-	public final String getReference2() {
-		return this.getProperty(PROPERTY_REFERENCE2);
-	}
-
-	/**
-	 * 设置-参考2
-	 * 
-	 * @param value
-	 *            值
-	 */
-	public final void setReference2(String value) {
-		this.setProperty(PROPERTY_REFERENCE2, value);
-	}
-
-	/**
-	 * 属性名称-备注
-	 */
-	private static final String PROPERTY_REMARKS_NAME = "Remarks";
-
-	/**
-	 * 备注 属性
-	 */
-	@DbField(name = "Remarks", type = DbFieldType.MEMO, table = DB_TABLE_NAME, primaryKey = false)
-	public static final IPropertyInfo<String> PROPERTY_REMARKS = registerProperty(PROPERTY_REMARKS_NAME, String.class,
-			MY_CLASS);
-
-	/**
-	 * 获取-备注
-	 * 
-	 * @return 值
-	 */
-	@XmlElement(name = PROPERTY_REMARKS_NAME)
-	public final String getRemarks() {
-		return this.getProperty(PROPERTY_REMARKS);
-	}
-
-	/**
-	 * 设置-备注
-	 * 
-	 * @param value
-	 *            值
-	 */
-	public final void setRemarks(String value) {
-		this.setProperty(PROPERTY_REMARKS, value);
-	}
-
-	/**
 	 * 属性名称-文件标识
 	 */
 	private static final String PROPERTY_FILESIGN_NAME = "FileSign";
@@ -788,6 +692,38 @@ public class Document extends BusinessObject<Document> implements IDocument {
 	}
 
 	/**
+	 * 属性名称-版本
+	 */
+	private static final String PROPERTY_VERSION_NAME = "Version";
+
+	/**
+	 * 版本 属性
+	 */
+	@DbField(name = "Version", type = DbFieldType.ALPHANUMERIC, table = DB_TABLE_NAME, primaryKey = false)
+	public static final IPropertyInfo<String> PROPERTY_VERSION = registerProperty(PROPERTY_VERSION_NAME, String.class,
+			MY_CLASS);
+
+	/**
+	 * 获取-版本
+	 * 
+	 * @return 值
+	 */
+	@XmlElement(name = PROPERTY_VERSION_NAME)
+	public final String getVersion() {
+		return this.getProperty(PROPERTY_VERSION);
+	}
+
+	/**
+	 * 设置-版本
+	 * 
+	 * @param value
+	 *            值
+	 */
+	public final void setVersion(String value) {
+		this.setProperty(PROPERTY_VERSION, value);
+	}
+
+	/**
 	 * 属性名称-标签
 	 */
 	private static final String PROPERTY_TAGS_NAME = "Tags";
@@ -820,12 +756,109 @@ public class Document extends BusinessObject<Document> implements IDocument {
 	}
 
 	/**
+	 * 属性名称-业务对象标识
+	 */
+	private static final String PROPERTY_BOKEYS_NAME = "BOKeys";
+
+	/**
+	 * 业务对象标识 属性
+	 */
+	@DbField(name = "BOKeys", type = DbFieldType.ALPHANUMERIC, table = DB_TABLE_NAME, primaryKey = false)
+	public static final IPropertyInfo<String> PROPERTY_BOKEYS = registerProperty(PROPERTY_BOKEYS_NAME, String.class,
+			MY_CLASS);
+
+	/**
+	 * 获取-业务对象标识
+	 * 
+	 * @return 值
+	 */
+	@XmlElement(name = PROPERTY_BOKEYS_NAME)
+	public final String getBOKeys() {
+		return this.getProperty(PROPERTY_BOKEYS);
+	}
+
+	/**
+	 * 设置-业务对象标识
+	 * 
+	 * @param value
+	 *            值
+	 */
+	public final void setBOKeys(String value) {
+		this.setProperty(PROPERTY_BOKEYS, value);
+	}
+
+	/**
+	 * 属性名称-参考1
+	 */
+	private static final String PROPERTY_REFERENCE1_NAME = "Reference1";
+
+	/**
+	 * 参考1 属性
+	 */
+	@DbField(name = "Ref1", type = DbFieldType.ALPHANUMERIC, table = DB_TABLE_NAME, primaryKey = false)
+	public static final IPropertyInfo<String> PROPERTY_REFERENCE1 = registerProperty(PROPERTY_REFERENCE1_NAME,
+			String.class, MY_CLASS);
+
+	/**
+	 * 获取-参考1
+	 * 
+	 * @return 值
+	 */
+	@XmlElement(name = PROPERTY_REFERENCE1_NAME)
+	public final String getReference1() {
+		return this.getProperty(PROPERTY_REFERENCE1);
+	}
+
+	/**
+	 * 设置-参考1
+	 * 
+	 * @param value
+	 *            值
+	 */
+	public final void setReference1(String value) {
+		this.setProperty(PROPERTY_REFERENCE1, value);
+	}
+
+	/**
+	 * 属性名称-参考2
+	 */
+	private static final String PROPERTY_REFERENCE2_NAME = "Reference2";
+
+	/**
+	 * 参考2 属性
+	 */
+	@DbField(name = "Ref2", type = DbFieldType.ALPHANUMERIC, table = DB_TABLE_NAME, primaryKey = false)
+	public static final IPropertyInfo<String> PROPERTY_REFERENCE2 = registerProperty(PROPERTY_REFERENCE2_NAME,
+			String.class, MY_CLASS);
+
+	/**
+	 * 获取-参考2
+	 * 
+	 * @return 值
+	 */
+	@XmlElement(name = PROPERTY_REFERENCE2_NAME)
+	public final String getReference2() {
+		return this.getProperty(PROPERTY_REFERENCE2);
+	}
+
+	/**
+	 * 设置-参考2
+	 * 
+	 * @param value
+	 *            值
+	 */
+	public final void setReference2(String value) {
+		this.setProperty(PROPERTY_REFERENCE2, value);
+	}
+
+	/**
 	 * 初始化数据
 	 */
 	@Override
 	protected void initialize() {
 		super.initialize();// 基类初始化，不可去除
 		this.setObjectCode(MyConfiguration.applyVariables(BUSINESS_OBJECT_CODE));
+
 	}
 
 }
