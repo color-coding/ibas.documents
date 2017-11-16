@@ -168,7 +168,7 @@ export class DocumentChooseView extends ibas.BOChooseView implements IDocumentCh
                 for (let item of datas) {
                     hDatas.rows.push(item);
                 }
-                model.refresh(false);
+                model.refresh(false);                done = true;
 
             }
         }
