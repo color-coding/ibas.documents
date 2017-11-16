@@ -23,14 +23,19 @@ export class BODocumentServiceView extends ibas.BODialogView implements IBODocum
     darw(): any {
         let that: this = this;
         this.table = new sap.ui.table.Table("", {
-            enableSelectAll: false,
+            selectionMode: sap.ui.table.SelectionMode.None,
             visibleRowCount: 5,
             rows: "{/}",
             columns: [
                 new sap.ui.table.Column("", {
                     label: ibas.i18n.prop("bo_document_filename"),
-                    template: new sap.m.Text("", {
-                        wrapping: false
+                    template: new sap.m.Link("", {
+                        width: "100%",
+                        press(): void {
+                            that.fireViewEvents(that.downloadFileEvent,
+                                this.getBindingContext().getObject()
+                            );
+                        },
                     }).bindProperty("text", {
                         path: "fileName"
                     })
@@ -51,6 +56,7 @@ export class BODocumentServiceView extends ibas.BODialogView implements IBODocum
                         path: "tags"
                     })
                 }),
+                /*
                 new sap.ui.table.Column("", {
                     label: ibas.i18n.prop("bo_document_reference1"),
                     template: new sap.m.Text("", {
@@ -67,7 +73,11 @@ export class BODocumentServiceView extends ibas.BODialogView implements IBODocum
                         path: "reference2"
                     })
                 }),
+                */
             ]
+        });
+        this.link = new sap.m.Link("", {
+            width: "100%"
         });
         return new sap.m.Dialog("", {
             title: this.title,
@@ -76,28 +86,43 @@ export class BODocumentServiceView extends ibas.BODialogView implements IBODocum
             stretchOnPhone: true,
             horizontalScrolling: true,
             verticalScrolling: true,
+            subHeader: new sap.m.Toolbar("", {
+                content: [
+                    this.link,
+                    new sap.ui.unified.FileUploader("", {
+                        name: "file",
+                        width: "auto",
+                        buttonOnly: true,
+                        buttonText: ibas.i18n.prop("documents_upload_document"),
+                        icon: "sap-icon://upload",
+                        change(event: sap.ui.base.Event): void {
+                            if (ibas.objects.isNull(event.getParameters())
+                                || ibas.objects.isNull(event.getParameters().files)
+                                || event.getParameters().files.length === 0) {
+                                return;
+                            }
+                            let fileData: FormData = new FormData();
+                            fileData.append("file", event.getParameters().files[0]);
+                            fileData.append("name", event.getParameters().newValue);
+                            that.application.viewShower.messages({
+                                type: ibas.emMessageType.QUESTION,
+                                actions: [
+                                    ibas.emMessageAction.YES,
+                                    ibas.emMessageAction.NO
+                                ],
+                                message: ibas.i18n.prop("documents_whether_upload_file"),
+                                onCompleted(action: ibas.emMessageAction): void {
+                                    if (action === ibas.emMessageAction.YES) {
+                                        that.fireViewEvents(that.uploadFileEvent, fileData);
+                                    }
+                                }
+                            });
+                        }
+                    }),
+                ]
+            }),
             content: [this.table],
             buttons: [
-                new sap.m.Button("", {
-                    text: ibas.i18n.prop("sys_shell_upload"),
-                    type: sap.m.ButtonType.Transparent,
-                    press: function (): void {
-                        that.fireViewEvents(that.uploadFileEvent,
-                            // 获取表格选中的对象
-                            openui5.utils.getTableSelecteds<bo.Document>(that.table).firstOrDefault()
-                        );
-                    }
-                }),
-                new sap.m.Button("", {
-                    text: ibas.i18n.prop("sys_shell_download"),
-                    type: sap.m.ButtonType.Transparent,
-                    press: function (): void {
-                        that.fireViewEvents(that.downloadFileEvent,
-                            // 获取表格选中的对象
-                            openui5.utils.getTableSelecteds<bo.Document>(that.table).firstOrDefault()
-                        );
-                    }
-                }),
                 new sap.m.Button("", {
                     text: ibas.i18n.prop("sys_shell_exit"),
                     type: sap.m.ButtonType.Transparent,
@@ -109,13 +134,14 @@ export class BODocumentServiceView extends ibas.BODialogView implements IBODocum
         });
     }
     private table: sap.ui.table.Table;
+    private link: sap.m.Link;
     /** 显示文档 */
     showDocuments(documents: bo.Document[]): void {
         this.table.setModel(new sap.ui.model.json.JSONModel(documents));
     }
     /** 显示关联对象 */
     showBOKeys(keys: string): void {
-        //
+        this.link.setText(ibas.i18n.prop("documents_bo_keys", keys));
     }
 
 }

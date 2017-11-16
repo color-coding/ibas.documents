@@ -27,6 +27,8 @@ export class BODocumentService extends ibas.Application<IBODocumentServiceView> 
     /** 注册视图 */
     protected registerView(): void {
         super.registerView();
+        this.view.uploadFileEvent = this.uploadFile;
+        this.view.downloadFileEvent = this.downloadFile;
     }
     /** 视图显示后 */
     protected viewShowed(): void {
@@ -106,6 +108,7 @@ export class BODocumentService extends ibas.Application<IBODocumentServiceView> 
                                     if (opRslt.resultCode !== 0) {
                                         throw new Error(opRslt.message);
                                     }
+                                    that.viewShowed();
                                     that.messages(ibas.emMessageType.SUCCESS,
                                         ibas.i18n.prop("sys_shell_upload") + ibas.i18n.prop("sys_shell_sucessful"));
                                 } catch (error) {

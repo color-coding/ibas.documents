@@ -8,6 +8,7 @@
   "documents_app_document_edit": "文档编辑",
   "documents_basis_information": "基本信息",
   "documents_other_information": "其他信息",
+  "documents_upload_document": "上传",
   "documents_whether_upload_file": "是否上传文件",
   "documents_view_file": "查看文件",
   "documents_download_file": "下载文件",
@@ -15,5 +16,6 @@
   "documents_unrecognized_document": "无法识别的文档，请下载浏览",
   "documents_bo_document_service": "文档服务",
   "documents_bo_document_icon": "sap-icon://documents",
+  "documents_bo_keys": "业务对象：{0}",
   "documents_closing_delimiter": "----结束----"
 }
