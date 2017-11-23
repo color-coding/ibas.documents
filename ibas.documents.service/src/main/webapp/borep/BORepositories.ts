@@ -10,7 +10,6 @@ import * as ibas from "ibas/index";
 import * as bo from "./bo/index";
 import { IBORepositoryDocuments, BO_REPOSITORY_DOCUMENTS } from "../api/index";
 import { DataConverter4dc } from "./DataConverters";
-import { FileData } from "ibas/index";
 
 /** Documents 业务仓库 */
 export class BORepositoryDocuments extends ibas.BORepositoryApplication implements IBORepositoryDocuments {
@@ -32,7 +31,7 @@ export class BORepositoryDocuments extends ibas.BORepositoryApplication implemen
      * 上传文档
      * @param caller 调用者
      */
-    upload(caller: ibas.UploadFileCaller<FileData>): void {
+    upload(caller: ibas.UploadFileCaller<ibas.FileData>): void {
         if (!this.address.endsWith("/")) { this.address += "/"; }
         let fileRepository: ibas.FileRepositoryUploadAjax = new ibas.FileRepositoryUploadAjax();
         fileRepository.address = this.address.replace("/services/rest/data/", "/services/rest/file/");
