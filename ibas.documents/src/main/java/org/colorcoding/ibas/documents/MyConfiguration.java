@@ -32,6 +32,6 @@ public class MyConfiguration extends org.colorcoding.ibas.bobas.MyConfiguration 
 	/**
 	 * 配置项目-文档文件夹
 	 */
-	public final static String CONFIG_ITEM_DOCUMENT_FILE_FOLDER = "DocumentFileFolder";
+	public final static String CONFIG_ITEM_DOCUMENT_FILE_FOLDER = "DCFileFolder";
 
 }
