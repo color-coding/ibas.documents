@@ -110,7 +110,7 @@ export class BODocumentService extends ibas.Application<IBODocumentServiceView> 
                                     }
                                     that.viewShowed();
                                     that.messages(ibas.emMessageType.SUCCESS,
-                                        ibas.i18n.prop("sys_shell_upload") + ibas.i18n.prop("sys_shell_sucessful"));
+                                        ibas.i18n.prop("shell_upload") + ibas.i18n.prop("shell_sucessful"));
                                 } catch (error) {
                                     that.messages(error);
                                 }
@@ -122,7 +122,7 @@ export class BODocumentService extends ibas.Application<IBODocumentServiceView> 
                 }
             }
         });
-        this.proceeding(ibas.emMessageType.INFORMATION, ibas.i18n.prop("sys_shell_uploading_file"));
+        this.proceeding(ibas.emMessageType.INFORMATION, ibas.i18n.prop("shell_uploading_file"));
     }
     /** 下载文件 */
     downloadFile(document: Document): void {
@@ -153,7 +153,7 @@ export class BODocumentService extends ibas.Application<IBODocumentServiceView> 
                 }
             }
         });
-        this.proceeding(ibas.emMessageType.INFORMATION, ibas.i18n.prop("sys_shell_downloading_file"));
+        this.proceeding(ibas.emMessageType.INFORMATION, ibas.i18n.prop("shell_downloading_file"));
     }
 }
 /** 业务对象文档服务-视图 */

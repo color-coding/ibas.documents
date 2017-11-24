@@ -34,7 +34,7 @@ export class DocumentEditView extends ibas.BOEditView implements IDocumentEditVi
                 new sap.ui.unified.FileUploader("", {
                     name: "file",
                     width: "100%",
-                    placeholder: ibas.i18n.prop("sys_shell_browse"),
+                    placeholder: ibas.i18n.prop("shell_browse"),
                     change(event: sap.ui.base.Event): void {
                         if (ibas.objects.isNull(event.getParameters())
                             || ibas.objects.isNull(event.getParameters().files)
@@ -128,7 +128,7 @@ export class DocumentEditView extends ibas.BOEditView implements IDocumentEditVi
             subHeader: new sap.m.Toolbar("", {
                 content: [
                     new sap.m.Button("", {
-                        text: ibas.i18n.prop("sys_shell_data_save"),
+                        text: ibas.i18n.prop("shell_data_save"),
                         type: sap.m.ButtonType.Transparent,
                         icon: "sap-icon://save",
                         press: function (): void {
@@ -136,7 +136,7 @@ export class DocumentEditView extends ibas.BOEditView implements IDocumentEditVi
                         }
                     }),
                     new sap.m.Button("", {
-                        text: ibas.i18n.prop("sys_shell_data_delete"),
+                        text: ibas.i18n.prop("shell_data_delete"),
                         type: sap.m.ButtonType.Transparent,
                         icon: "sap-icon://delete",
                         press: function (): void {
@@ -154,7 +154,7 @@ export class DocumentEditView extends ibas.BOEditView implements IDocumentEditVi
                     }),
                     /*
                     new sap.m.MenuButton("", {
-                        text: ibas.i18n.prop("sys_shell_data_new"),
+                        text: ibas.i18n.prop("shell_data_new"),
                         type: sap.m.ButtonType.Transparent,
                         icon: "sap-icon://create",
                         buttonMode: sap.m.MenuButtonMode.Split,
@@ -165,11 +165,11 @@ export class DocumentEditView extends ibas.BOEditView implements IDocumentEditVi
                         menu: new sap.m.Menu("", {
                             items: [
                                 new sap.m.MenuItem("", {
-                                    text: ibas.i18n.prop("sys_shell_data_new"),
+                                    text: ibas.i18n.prop("shell_data_new"),
                                     icon: "sap-icon://create"
                                 }),
                                 new sap.m.MenuItem("", {
-                                    text: ibas.i18n.prop("sys_shell_data_clone"),
+                                    text: ibas.i18n.prop("shell_data_clone"),
                                     icon: "sap-icon://copy"
                                 }),
                             ],

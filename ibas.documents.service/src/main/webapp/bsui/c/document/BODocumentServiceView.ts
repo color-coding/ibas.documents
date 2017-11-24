@@ -124,7 +124,7 @@ export class BODocumentServiceView extends ibas.BODialogView implements IBODocum
             content: [this.table],
             buttons: [
                 new sap.m.Button("", {
-                    text: ibas.i18n.prop("sys_shell_exit"),
+                    text: ibas.i18n.prop("shell_exit"),
                     type: sap.m.ButtonType.Transparent,
                     press: function (): void {
                         that.fireViewEvents(that.closeEvent);

@@ -81,7 +81,7 @@ export class DocumentViewApp extends ibas.BOViewService<IDocumentViewView> {
                 }
             }
         });
-        this.proceeding(ibas.emMessageType.INFORMATION, ibas.i18n.prop("sys_shell_fetching_data"));
+        this.proceeding(ibas.emMessageType.INFORMATION, ibas.i18n.prop("shell_fetching_data"));
     }
     /** 下载文件 */
     downloadFile(): void {
@@ -109,7 +109,7 @@ export class DocumentViewApp extends ibas.BOViewService<IDocumentViewView> {
                 }
             }
         });
-        this.proceeding(ibas.emMessageType.INFORMATION, ibas.i18n.prop("sys_shell_downloading_file"));
+        this.proceeding(ibas.emMessageType.INFORMATION, ibas.i18n.prop("shell_downloading_file"));
     }
     /** 获取服务的契约 */
     protected getServiceProxies(): ibas.IServiceProxy<ibas.IServiceContract>[] {
