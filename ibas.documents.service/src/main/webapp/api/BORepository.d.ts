@@ -12,11 +12,12 @@ import {
     UploadFileCaller,
     FileData,
     DownloadFileCaller,
+    IBORepositoryApplication
 } from "ibas/index";
 import * as bo from "./bo/index"
 
 /** Documents 业务仓库 */
-export interface IBORepositoryDocuments {
+export interface IBORepositoryDocuments extends IBORepositoryApplication {
 
     /**
      * 获取地址
