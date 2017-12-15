@@ -48,12 +48,14 @@ export class DocumentViewApp extends ibas.BOViewService<IDocumentViewView> {
         app.run(this.viewData);
     }
     /** 运行,覆盖原方法 */
-    run(...args: any[]): void {
-        if (arguments[0] instanceof bo.Document) {
+    run(): void;
+    run(data: bo.Document): void;
+    run(): void {
+        if (!(arguments[0] instanceof bo.Document)) {
             this.viewData = arguments[0];
             this.show();
         } else {
-            super.run.apply(this, args);
+            super.run.apply(this, arguments);
         }
     }
     private viewData: bo.Document;
@@ -134,7 +136,7 @@ export class DocumentLinkServiceMapping extends ibas.BOLinkServiceMapping {
         this.description = ibas.i18n.prop(this.name);
     }
     /** 创建服务并运行 */
-    create(): ibas.IService<ibas.IServiceContract> {
+    create(): ibas.IService<ibas.IBOLinkServiceCaller> {
         return new DocumentViewApp();
     }
 }
