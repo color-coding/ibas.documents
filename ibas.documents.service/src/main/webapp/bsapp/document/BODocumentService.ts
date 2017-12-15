@@ -11,7 +11,7 @@ import { Document } from "../../borep/bo/index";
 import { BORepositoryDocuments } from "../../borep/BORepositories";
 
 /** 业务对象文档服务 */
-export class BODocumentService extends ibas.Application<IBODocumentServiceView> implements ibas.IService<ibas.IServiceCaller> {
+export class BODocumentService extends ibas.ServiceApplication<IBODocumentServiceView, ibas.IBOServiceContract | ibas.IBOListServiceContract>  {
 
     /** 应用标识 */
     static APPLICATION_ID: string = "bda600a8-7d36-4e7e-97cd-364fb032b752";
@@ -57,25 +57,22 @@ export class BODocumentService extends ibas.Application<IBODocumentServiceView> 
             }
         });
     }
-    /** 运行,覆盖原方法 */
-    run(): void {
-        if (!ibas.objects.isNull(arguments) && arguments.length === 1) {
-            let contract: ibas.IBOServiceContract = <ibas.IBOServiceContract>arguments[0];
-            if (!ibas.objects.isNull(contract.data)) {
-                // 传入的数据可能是数组
-                if (contract.data instanceof Array) {
-                    // 数组只处理第一个
-                    this.bo = contract.data[0];
-                } else {
-                    this.bo = contract.data;
-                }
-                super.run();
-                return;
+    /** 运行服务 */
+    runService(contract: ibas.IBOServiceContract | ibas.IBOListServiceContract): void {
+        if (!ibas.objects.isNull(contract) && !ibas.objects.isNull(contract.data)) {
+            // 传入的数据可能是数组
+            if (contract.data instanceof Array) {
+                // 数组只处理第一个
+                this.bo = contract.data[0];
+            } else {
+                this.bo = contract.data;
             }
+            super.show();
+        } else {
+            // 输入数据无效，服务不运行
+            this.proceeding(ibas.emMessageType.WARNING,
+                ibas.i18n.prop("documents_bo_document_service") + ibas.i18n.prop("sys_invalid_parameter", "data"));
         }
-        // 输入数据无效，服务不运行
-        this.proceeding(ibas.emMessageType.WARNING,
-            ibas.i18n.prop("documents_bo_document_service") + ibas.i18n.prop("sys_invalid_parameter", "data"));
     }
     /** 关联的数据 */
     private bo: ibas.IBusinessObject;
@@ -178,7 +175,7 @@ export class BODocumentServiceMapping extends ibas.ServiceMapping {
         this.proxy = ibas.BOServiceProxy;
         this.icon = ibas.i18n.prop("documents_bo_document_icon");
     }
-    /** 创建服务并运行 */
+    /** 创建服务实例 */
     create(): ibas.IService<ibas.IServiceContract> {
         return new BODocumentService();
     }
@@ -194,7 +191,7 @@ export class BOListDocumentServiceMapping extends ibas.ServiceMapping {
         this.proxy = ibas.BOListServiceProxy;
         this.icon = ibas.i18n.prop("documents_bo_document_icon");
     }
-    /** 创建服务并运行 */
+    /** 创建服务实例 */
     create(): ibas.IService<ibas.IServiceContract> {
         return new BODocumentService();
     }
