@@ -99,31 +99,47 @@ public class FileService extends FileRepositoryService {
 	}
 
 	@GET
-	@Path("{document}")
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_OCTET_STREAM)
-	public byte[] document(@PathParam("document") String document, @QueryParam("token") String token,
-						   @Context HttpServletResponse response) {
-		Criteria criteria = new Criteria();
-		ICondition condition = criteria.getConditions().create();
-		condition.setAlias(FileRepositoryReadonly.CRITERIA_CONDITION_ALIAS_FILE_NAME);
-		condition.setValue(document);
-		return this.download(criteria, token, response);
-	}
-
-	@GET
-	@Path(value = "/resource/{fileName}")
-	public void service(@PathParam("fileName") String fileName, @Context HttpServletResponse response)
-			throws IOException {
+	@Path("{resource}")
+	public void resource(@PathParam("resource") String fileName, @QueryParam("token") String token,
+						 @Context HttpServletResponse response) throws IOException {
 		try {
-			OutputStream os = response.getOutputStream();
-			byte[] buffer = this.document(fileName, SYSTEM_USER.getToken(), response);
-			response.setHeader("content-disposition", "");
-			if (buffer.length == 0) {
+			Criteria criteria = new Criteria();
+			ICondition condition = criteria.getConditions().create();
+			condition.setAlias(FileRepositoryReadonly.CRITERIA_CONDITION_ALIAS_FILE_NAME);
+			condition.setValue(fileName);
+			// 获取文件
+			IOperationResult<FileData> operationResult = this.fetch(criteria, SYSTEM_USER.getToken());
+			if (operationResult.getError() != null) {
+				throw operationResult.getError();
+			}
+			if (operationResult.getResultCode() != 0) {
+				throw new Error(operationResult.getMessage());
+			}
+			FileData fileData = operationResult.getResultObjects().firstOrDefault();
+			if (fileData != null) {
+				// 数据存在，尝试转为字节数组
+				File file = new File(fileData.getLocation());
+				long fileSize = file.length();
+				if (fileSize > Integer.MAX_VALUE) {
+					throw new Exception(I18N.prop("msg_bobas_invalid_data"));
+				}
+				FileInputStream inputStream = new FileInputStream(file);
+				byte[] buffer = new byte[(int) fileSize];
+				int offset = 0;
+				int numRead = 0;
+				while (offset < buffer.length
+						&& (numRead = inputStream.read(buffer, offset, buffer.length - offset)) >= 0) {
+					offset += numRead;
+				}
+				inputStream.close();
+				// 写入响应输出流
+				OutputStream os = response.getOutputStream();
+				os.write(buffer);
+				os.flush();
+			} else {
+				// 文件不存在
 				throw new Exception(I18N.prop("msg_bobas_not_found_file", fileName));
 			}
-			os.write(buffer);
-			os.flush();
 		} catch (Exception e) {
 			Logger.log(e);
 			response.sendError(404, "Not Found");
