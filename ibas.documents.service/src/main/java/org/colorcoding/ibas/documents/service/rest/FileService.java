@@ -1,8 +1,6 @@
 package org.colorcoding.ibas.documents.service.rest;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
+import java.io.*;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.Consumes;
@@ -29,6 +27,8 @@ import org.colorcoding.ibas.documents.MyConfiguration;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 
+import static org.colorcoding.ibas.bobas.organization.OrganizationFactory.SYSTEM_USER;
+
 @Path("file")
 public class FileService extends FileRepositoryService {
 	/**
@@ -48,7 +48,7 @@ public class FileService extends FileRepositoryService {
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	@Produces(MediaType.APPLICATION_JSON)
 	public OperationResult<FileData> upload(@FormDataParam("file") InputStream fileStream,
-			@FormDataParam("file") FormDataContentDisposition fileDisposition, @QueryParam("token") String token) {
+											@FormDataParam("file") FormDataContentDisposition fileDisposition, @QueryParam("token") String token) {
 		return super.save(fileStream, fileDisposition, token);
 	}
 
@@ -57,7 +57,7 @@ public class FileService extends FileRepositoryService {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_OCTET_STREAM)
 	public byte[] download(Criteria criteria, @QueryParam("token") String token,
-			@Context HttpServletResponse response) {
+						   @Context HttpServletResponse response) {
 		try {
 			// 获取文件
 			IOperationResult<FileData> operationResult = this.fetch(criteria, token);
@@ -90,7 +90,7 @@ public class FileService extends FileRepositoryService {
 			} else {
 				// 无效的导出数据
 				response.setHeader("content-disposition", "attachment;filename=INVALID_DATA");
-				return new byte[] {};
+				return new byte[]{};
 			}
 		} catch (Exception e) {
 			Logger.log(e);
@@ -103,7 +103,7 @@ public class FileService extends FileRepositoryService {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_OCTET_STREAM)
 	public byte[] document(@PathParam("document") String document, @QueryParam("token") String token,
-			@Context HttpServletResponse response) {
+						   @Context HttpServletResponse response) {
 		Criteria criteria = new Criteria();
 		ICondition condition = criteria.getConditions().create();
 		condition.setAlias(FileRepositoryReadonly.CRITERIA_CONDITION_ALIAS_FILE_NAME);
@@ -111,4 +111,22 @@ public class FileService extends FileRepositoryService {
 		return this.download(criteria, token, response);
 	}
 
+	@GET
+	@Path(value = "/resource/{fileName}")
+	public void service(@PathParam("fileName") String fileName, @Context HttpServletResponse response)
+			throws IOException {
+		try {
+			OutputStream os = response.getOutputStream();
+			byte[] buffer = this.document(fileName, SYSTEM_USER.getToken(), response);
+			response.setHeader("content-disposition", "");
+			if (buffer.length == 0) {
+				throw new Exception(I18N.prop("msg_bobas_not_found_file", fileName));
+			}
+			os.write(buffer);
+			os.flush();
+		} catch (Exception e) {
+			Logger.log(e);
+			response.sendError(404, "Not Found");
+		}
+	}
 }
