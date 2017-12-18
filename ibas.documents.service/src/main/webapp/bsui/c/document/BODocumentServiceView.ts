@@ -102,8 +102,7 @@ export class BODocumentServiceView extends ibas.BODialogView implements IBODocum
                                 return;
                             }
                             let fileData: FormData = new FormData();
-                            fileData.append("file", event.getParameters().files[0]);
-                            fileData.append("name", event.getParameters().newValue);
+                            fileData.append("file", event.getParameters().files[0], encodeURI(event.getParameters().newValue));
                             that.application.viewShower.messages({
                                 type: ibas.emMessageType.QUESTION,
                                 actions: [
