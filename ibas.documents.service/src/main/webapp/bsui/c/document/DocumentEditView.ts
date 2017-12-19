@@ -46,6 +46,7 @@ export class DocumentEditView extends ibas.BOEditView implements IDocumentEditVi
                         fileData.append("file", event.getParameters().files[0], encodeURI(event.getParameters().newValue));
                         that.application.viewShower.messages({
                             type: ibas.emMessageType.QUESTION,
+                            title: that.application.description,
                             actions: [
                                 ibas.emMessageAction.YES,
                                 ibas.emMessageAction.NO
