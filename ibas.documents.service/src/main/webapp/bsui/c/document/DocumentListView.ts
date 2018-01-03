@@ -123,7 +123,7 @@ export class DocumentListView extends ibas.BOListView implements IDocumentListVi
                         press: function (): void {
                             that.fireViewEvents(that.viewDataEvent,
                                 // 获取表格选中的对象
-                                openui5.utils.getTableSelecteds<bo.Document>(that.table).firstOrDefault()
+                                openui5.utils.getSelecteds<bo.Document>(that.table).firstOrDefault()
                             );
                         }
                     }),
@@ -134,7 +134,7 @@ export class DocumentListView extends ibas.BOListView implements IDocumentListVi
                         press: function (): void {
                             that.fireViewEvents(that.editDataEvent,
                                 // 获取表格选中的对象
-                                openui5.utils.getTableSelecteds<bo.Document>(that.table).firstOrDefault()
+                                openui5.utils.getSelecteds<bo.Document>(that.table).firstOrDefault()
                             );
                         }
                     }),
@@ -146,7 +146,7 @@ export class DocumentListView extends ibas.BOListView implements IDocumentListVi
                         press: function (): void {
                             that.fireViewEvents(that.deleteDataEvent,
                                 // 获取表格选中的对象
-                                openui5.utils.getTableSelecteds<bo.Document>(that.table)
+                                openui5.utils.getSelecteds<bo.Document>(that.table)
                             );
                         }
                     }),
@@ -245,6 +245,6 @@ export class DocumentListView extends ibas.BOListView implements IDocumentListVi
     }
     /** 获取选择的数据 */
     getSelecteds(): bo.Document[] {
-        return openui5.utils.getTableSelecteds<bo.Document>(this.table);
+        return openui5.utils.getSelecteds<bo.Document>(this.table);
     }
 }
