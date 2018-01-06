@@ -37,7 +37,7 @@ export class BODocumentService extends ibas.ServiceApplication<IBODocumentServic
         let criteria: ibas.ICriteria = new ibas.Criteria();
         let condition: ibas.ICondition = criteria.conditions.create();
         condition.alias = Document.PROPERTY_ACTIVATED_NAME;
-        condition.value = "Y";
+        condition.value = ibas.emYesNo.YES.toString();
         condition = criteria.conditions.create();
         condition.alias = Document.PROPERTY_BOKEYS_NAME;
         condition.value = this.bo.toString();
