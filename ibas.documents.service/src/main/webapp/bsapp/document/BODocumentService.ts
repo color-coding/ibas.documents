@@ -11,7 +11,8 @@ import { Document } from "../../borep/bo/index";
 import { BORepositoryDocuments } from "../../borep/BORepositories";
 
 /** 业务对象文档服务 */
-export class BODocumentService extends ibas.ServiceApplication<IBODocumentServiceView, ibas.IBOServiceContract | ibas.IBOListServiceContract>  {
+export class BODocumentService
+    extends ibas.ServiceApplication<IBODocumentServiceView, ibas.IBOServiceContract | ibas.IBOListServiceContract>  {
 
     /** 应用标识 */
     static APPLICATION_ID: string = "bda600a8-7d36-4e7e-97cd-364fb032b752";
