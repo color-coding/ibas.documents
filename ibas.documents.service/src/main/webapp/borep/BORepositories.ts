@@ -9,14 +9,14 @@
 import * as ibas from "ibas/index";
 import * as bo from "./bo/index";
 import { IBORepositoryDocuments, BO_REPOSITORY_DOCUMENTS } from "../api/index";
-import { DataConverter4dc } from "./DataConverters";
+import { DataConverter4DC } from "./DataConverters";
 
 /** Documents 业务仓库 */
 export class BORepositoryDocuments extends ibas.BORepositoryApplication implements IBORepositoryDocuments {
 
     /** 创建此模块的后端与前端数据的转换者 */
     protected createConverter(): ibas.IDataConverter {
-        return new DataConverter4dc;
+        return new DataConverter4DC;
     }
     /**
      * 获取地址

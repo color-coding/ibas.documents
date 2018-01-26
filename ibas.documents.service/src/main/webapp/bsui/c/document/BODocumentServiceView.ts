@@ -20,7 +20,7 @@ export class BODocumentServiceView extends ibas.BODialogView implements IBODocum
     /** 下载文件 */
     downloadFileEvent: Function;
     /** 绘制视图 */
-    darw(): any {
+    draw(): any {
         let that: this = this;
         this.table = new sap.ui.table.Table("", {
             selectionMode: sap.ui.table.SelectionMode.None,

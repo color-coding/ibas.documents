@@ -20,7 +20,7 @@ export class DocumentViewView extends ibas.BOViewView implements IDocumentViewVi
     /** 下载文件 */
     downloadFileEvent: Function;
     /** 绘制视图 */
-    darw(): any {
+    draw(): any {
         let that: this = this;
         this.page = new sap.m.Page("", {
             showHeader: false,

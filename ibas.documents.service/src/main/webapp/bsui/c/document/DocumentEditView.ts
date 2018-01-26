@@ -25,7 +25,7 @@ export class DocumentEditView extends ibas.BOEditView implements IDocumentEditVi
     downloadFileEvent: Function;
 
     /** 绘制视图 */
-    darw(): any {
+    draw(): any {
         let that: this = this;
         this.form = new sap.ui.layout.form.SimpleForm("", {
             editable: true,
@@ -153,42 +153,6 @@ export class DocumentEditView extends ibas.BOEditView implements IDocumentEditVi
                             that.fireViewEvents(that.downloadFileEvent);
                         }
                     }),
-                    /*
-                    new sap.m.MenuButton("", {
-                        text: ibas.i18n.prop("shell_data_new"),
-                        type: sap.m.ButtonType.Transparent,
-                        icon: "sap-icon://create",
-                        buttonMode: sap.m.MenuButtonMode.Split,
-                        defaultAction: function (): void {
-                            // 触发新建对象
-                            that.fireViewEvents(that.createDataEvent, false);
-                        },
-                        menu: new sap.m.Menu("", {
-                            items: [
-                                new sap.m.MenuItem("", {
-                                    text: ibas.i18n.prop("shell_data_new"),
-                                    icon: "sap-icon://create"
-                                }),
-                                new sap.m.MenuItem("", {
-                                    text: ibas.i18n.prop("shell_data_clone"),
-                                    icon: "sap-icon://copy"
-                                }),
-                            ],
-                            itemSelected: function (event: any): void {
-                                let item: any = event.getParameter("item");
-                                if (item instanceof sap.m.MenuItem) {
-                                    if (item.getIcon() === "sap-icon://copy") {
-                                        // 触发克隆对象
-                                        that.fireViewEvents(that.createDataEvent, true);
-                                    } else {
-                                        // 触发新建对象
-                                        that.fireViewEvents(that.createDataEvent, false);
-                                    }
-                                }
-                            }
-                        })
-                    }),
-                    */
                 ]
             }),
             content: [this.form]

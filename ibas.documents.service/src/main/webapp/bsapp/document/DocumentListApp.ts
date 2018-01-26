@@ -9,7 +9,7 @@
 import * as ibas from "ibas/index";
 import * as bo from "../../borep/bo/index";
 import { BORepositoryDocuments } from "../../borep/BORepositories";
-import { DataConverter4dc } from "../../borep/DataConverters";
+import { DataConverter4DC } from "../../borep/DataConverters";
 import { DocumentViewApp } from "./DocumentViewApp";
 import { DocumentEditApp } from "./DocumentEditApp";
 
@@ -179,7 +179,7 @@ export class DocumentListApp extends ibas.BOListApplication<IDocumentListView, b
         return [
             new ibas.BOListServiceProxy({
                 data: this.view.getSelecteds(),
-                converter: new DataConverter4dc(),
+                converter: new DataConverter4DC(),
             })
         ];
     }
