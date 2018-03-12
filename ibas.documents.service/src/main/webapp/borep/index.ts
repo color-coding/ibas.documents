@@ -14,8 +14,8 @@
 namespace documents {
     export namespace bo {
         // 注册业务对象仓库到工厂
-        ibas.boFactory.register(BO_REPOSITORY_DOCUMENTS, BORepositoryDocuments);
+        boFactory.register(BO_REPOSITORY_DOCUMENTS, BORepositoryDocuments);
         // 注册业务对象到工厂
-        ibas.boFactory.register(Document.BUSINESS_OBJECT_CODE, Document);
+        boFactory.register(Document.BUSINESS_OBJECT_CODE, Document);
     }
 }
