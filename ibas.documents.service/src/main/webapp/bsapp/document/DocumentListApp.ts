@@ -169,15 +169,6 @@ namespace documents {
                     }
                 });
             }
-            /** 获取服务的契约 */
-            protected getServiceProxies(): ibas.IServiceProxy<ibas.IServiceContract>[] {
-                return [
-                    new ibas.BOListServiceProxy({
-                        data: this.view.getSelecteds(),
-                        converter: new bo.DataConverter(),
-                    })
-                ];
-            }
         }
         /** 视图-文档 */
         export interface IDocumentListView extends ibas.IBOListView {
@@ -187,8 +178,6 @@ namespace documents {
             deleteDataEvent: Function;
             /** 显示数据 */
             showData(datas: bo.Document[]): void;
-            /** 获取选择的数据 */
-            getSelecteds(): bo.Document[];
         }
     }
 }
