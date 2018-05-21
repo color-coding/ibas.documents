@@ -32,7 +32,7 @@ namespace documents {
             /** 视图显示后 */
             protected viewShowed(): void {
                 // 视图加载完成
-                this.view.showBOKeys(this.bo.toString());
+                this.view.showBusinessObject(this.bo);
                 let criteria: ibas.ICriteria = new ibas.Criteria();
                 let condition: ibas.ICondition = criteria.conditions.create();
                 condition.alias = bo.Document.PROPERTY_ACTIVATED_NAME;
@@ -155,7 +155,7 @@ namespace documents {
         /** 业务对象文档服务-视图 */
         export interface IBODocumentServiceView extends ibas.IView {
             /** 显示关联对象 */
-            showBOKeys(keys: string): void;
+            showBusinessObject(bo: ibas.IBusinessObject): void;
             /** 显示已存在文档 */
             showDocuments(documents: bo.Document[]): void;
             /** 上传文件 */

@@ -19,73 +19,14 @@ namespace documents {
                 /** 绘制视图 */
                 draw(): any {
                     let that: this = this;
-                    this.table = new sap.ui.table.Table("", {
-                        selectionMode: sap.ui.table.SelectionMode.None,
-                        visibleRowCount: 5,
-                        rows: "{/}",
-                        columns: [
-                            new sap.ui.table.Column("", {
-                                label: ibas.i18n.prop("bo_document_filename"),
-                                template: new sap.m.Link("", {
-                                    width: "100%",
-                                    press(): void {
-                                        that.fireViewEvents(that.downloadFileEvent,
-                                            this.getBindingContext().getObject()
-                                        );
-                                    },
-                                }).bindProperty("text", {
-                                    path: "fileName"
-                                })
-                            }),
-                            new sap.ui.table.Column("", {
-                                label: ibas.i18n.prop("bo_document_version"),
-                                template: new sap.m.Text("", {
-                                    wrapping: false
-                                }).bindProperty("text", {
-                                    path: "version"
-                                })
-                            }),
-                            new sap.ui.table.Column("", {
-                                label: ibas.i18n.prop("bo_document_tags"),
-                                template: new sap.m.Text("", {
-                                    wrapping: false
-                                }).bindProperty("text", {
-                                    path: "tags"
-                                })
-                            }),
-                            /*
-                            new sap.ui.table.Column("", {
-                                label: ibas.i18n.prop("bo_document_reference1"),
-                                template: new sap.m.Text("", {
-                                    wrapping: false
-                                }).bindProperty("text", {
-                                    path: "reference1"
-                                })
-                            }),
-                            new sap.ui.table.Column("", {
-                                label: ibas.i18n.prop("bo_document_reference2"),
-                                template: new sap.m.Text("", {
-                                    wrapping: false
-                                }).bindProperty("text", {
-                                    path: "reference2"
-                                })
-                            }),
-                            */
-                        ]
+                    this.listTitle = new sap.m.Title("", {
+                        level: sap.ui.core.TitleLevel.H4
                     });
-                    this.link = new sap.m.Link("", {
-                        width: "100%"
-                    });
-                    return new sap.m.Dialog("", {
-                        title: this.title,
-                        type: sap.m.DialogType.Standard,
-                        state: sap.ui.core.ValueState.None,
-                        stretchOnPhone: true,
-                        horizontalScrolling: true,
-                        verticalScrolling: true,
-                        subHeader: new sap.m.Toolbar("", {
+                    this.list = new sap.m.List("", {
+                        headerToolbar: new sap.m.Toolbar("", {
                             content: [
-                                this.link,
+                                this.listTitle,
+                                new sap.m.ToolbarSpacer("", { width: "80px" }),
                                 new sap.ui.unified.FileUploader("", {
                                     name: "file",
                                     width: "auto",
@@ -118,7 +59,17 @@ namespace documents {
                                 }),
                             ]
                         }),
-                        content: [this.table],
+                    });
+                    return new sap.m.Dialog("", {
+                        title: this.title,
+                        type: sap.m.DialogType.Standard,
+                        state: sap.ui.core.ValueState.None,
+                        stretchOnPhone: true,
+                        horizontalScrolling: true,
+                        verticalScrolling: true,
+                        content: [
+                            this.list
+                        ],
                         buttons: [
                             new sap.m.Button("", {
                                 text: ibas.i18n.prop("shell_exit"),
@@ -130,15 +81,31 @@ namespace documents {
                         ],
                     });
                 }
-                private table: sap.ui.table.Table;
-                private link: sap.m.Link;
+                private list: sap.m.List;
+                private listTitle: sap.m.Title;
                 /** 显示文档 */
                 showDocuments(documents: bo.Document[]): void {
-                    this.table.setModel(new sap.ui.model.json.JSONModel(documents));
+                    let that: this = this;
+                    for (let item of documents) {
+                        this.list.addItem(new sap.m.FeedListItem("", {
+                            icon: "sap-icon://document",
+                            text: item.fileName,
+                            info: item.version,
+                            timestamp: item.fileSign,
+                            iconPress(oControlEvent: sap.ui.base.Event): void {
+                                // 下载资源
+                                that.fireViewEvents(that.downloadFileEvent, item);
+                            }
+                        }));
+                    }
                 }
                 /** 显示关联对象 */
-                showBOKeys(keys: string): void {
-                    this.link.setText(ibas.i18n.prop("documents_bo_keys", keys));
+                showBusinessObject(bo: ibas.IBusinessObject): void {
+                    let text: string = bo.toString();
+                    if (text.startsWith("{") && text.endsWith("}")) {
+                        text = text.substring(1, text.length - 1);
+                    }
+                    this.listTitle.setText(ibas.i18n.prop("documents_bo_title", text));
                 }
 
             }
