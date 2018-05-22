@@ -8,6 +8,7 @@ import javax.xml.bind.annotation.XmlType;
 
 import org.colorcoding.ibas.bobas.approval.IApprovalData;
 import org.colorcoding.ibas.bobas.bo.BusinessObject;
+import org.colorcoding.ibas.bobas.bo.IBOUserFields;
 import org.colorcoding.ibas.bobas.core.IPropertyInfo;
 import org.colorcoding.ibas.bobas.data.DateTime;
 import org.colorcoding.ibas.bobas.data.emApprovalStatus;
@@ -26,7 +27,8 @@ import org.colorcoding.ibas.documents.MyConfiguration;
 @XmlType(name = Document.BUSINESS_OBJECT_NAME, namespace = MyConfiguration.NAMESPACE_BO)
 @XmlRootElement(name = Document.BUSINESS_OBJECT_NAME, namespace = MyConfiguration.NAMESPACE_BO)
 @BOCode(Document.BUSINESS_OBJECT_CODE)
-public class Document extends BusinessObject<Document> implements IDocument, IDataOwnership, IApprovalData {
+public class Document extends BusinessObject<Document>
+		implements IDocument, IDataOwnership, IApprovalData, IBOUserFields {
 
 	/**
 	 * 序列化版本标记
