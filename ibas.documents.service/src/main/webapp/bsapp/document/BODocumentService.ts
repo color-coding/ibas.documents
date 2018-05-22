@@ -9,9 +9,7 @@ namespace documents {
     export namespace app {
 
         /** 业务对象文档服务 */
-        export class BODocumentService
-            extends ibas.ServiceApplication<IBODocumentServiceView, ibas.IBOServiceContract | ibas.IBOListServiceContract> {
-
+        export class BODocumentService extends ibas.ServiceApplication<IBODocumentServiceView, ibas.IBOServiceContract> {
             /** 应用标识 */
             static APPLICATION_ID: string = "bda600a8-7d36-4e7e-97cd-364fb032b752";
             /** 应用名称 */
@@ -57,7 +55,7 @@ namespace documents {
                 });
             }
             /** 运行服务 */
-            runService(contract: ibas.IBOServiceContract | ibas.IBOListServiceContract): void {
+            runService(contract: ibas.IBOServiceContract): void {
                 if (!ibas.objects.isNull(contract) && !ibas.objects.isNull(contract.data)) {
                     // 传入的数据可能是数组
                     if (contract.data instanceof Array) {
@@ -172,22 +170,6 @@ namespace documents {
                 this.name = BODocumentService.APPLICATION_NAME;
                 this.description = ibas.i18n.prop(this.name);
                 this.proxy = ibas.BOServiceProxy;
-                this.icon = ibas.i18n.prop("documents_bo_document_icon");
-            }
-            /** 创建服务实例 */
-            create(): ibas.IService<ibas.IServiceContract> {
-                return new BODocumentService();
-            }
-        }
-        /** 业务对象文档服务映射 */
-        export class BOListDocumentServiceMapping extends ibas.ServiceMapping {
-
-            constructor() {
-                super();
-                this.id = BODocumentService.APPLICATION_ID.substring(0, BODocumentService.APPLICATION_ID.length - 2) + "4";
-                this.name = BODocumentService.APPLICATION_NAME;
-                this.description = ibas.i18n.prop(this.name);
-                this.proxy = ibas.BOListServiceProxy;
                 this.icon = ibas.i18n.prop("documents_bo_document_icon");
             }
             /** 创建服务实例 */

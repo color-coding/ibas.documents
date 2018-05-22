@@ -35,7 +35,6 @@ namespace documents {
                 this.register(new DocumentChooseServiceMapping());
                 this.register(new DocumentLinkServiceMapping());
                 this.register(new BODocumentServiceMapping());
-                this.register(new BOListDocumentServiceMapping());
                 // 注册常驻应用
 
             }
