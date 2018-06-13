@@ -9,7 +9,7 @@ namespace documents {
     export namespace app {
 
         /** 查看应用-文档 */
-        export class DocumentViewApp extends ibas.BOViewService<IDocumentViewView> {
+        export class DocumentViewApp extends ibas.BOViewService<IDocumentViewView, bo.Document> {
 
             /** 应用标识 */
             static APPLICATION_ID: string = "cc996b82-4897-42fb-938f-33b147d00e6a";
@@ -55,13 +55,15 @@ namespace documents {
                     super.run.apply(this, arguments);
                 }
             }
-            private viewData: bo.Document;
+            protected viewData: bo.Document;
             /** 查询数据 */
             protected fetchData(criteria: ibas.ICriteria | string): void {
                 this.busy(true);
                 let that: this = this;
                 if (typeof criteria === "string") {
+                    let value: string = criteria;
                     criteria = new ibas.Criteria();
+                    criteria.result = 1;
                     // 添加查询条件
 
                 }
@@ -74,7 +76,11 @@ namespace documents {
                                 throw new Error(opRslt.message);
                             }
                             that.viewData = opRslt.resultObjects.firstOrDefault();
-                            that.viewShowed();
+                            if (!that.isViewShowed()) {
+                                that.show();
+                            } else {
+                                that.viewShowed();
+                            }
                         } catch (error) {
                             that.messages(error);
                         }
