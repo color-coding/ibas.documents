@@ -32,8 +32,7 @@ public class FileService extends FileRepositoryService {
 	/**
 	 * 工作目录
 	 */
-	public final static String WORK_FOLDER = MyConfiguration.getConfigValue(
-			MyConfiguration.CONFIG_ITEM_DOCUMENT_FILE_FOLDER,
+	public final static String WORK_FOLDER = MyConfiguration.getConfigValue(MyConfiguration.CONFIG_ITEM_DOCUMENT_FOLDER,
 			MyConfiguration.getDataFolder() + File.separator + "documents_files");
 
 	public FileService() {
