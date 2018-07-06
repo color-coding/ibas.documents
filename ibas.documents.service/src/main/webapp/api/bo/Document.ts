@@ -8,7 +8,7 @@
 namespace documents {
     export namespace bo {
         /** 文档 */
-        export interface IDocument extends ibas.IBOSimple {
+        export interface IDocument extends ibas.IBOSimple, ibas.IBOUserFields {
 
             /** 编号 */
             objectKey: number;
