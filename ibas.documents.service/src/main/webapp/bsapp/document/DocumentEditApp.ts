@@ -189,8 +189,8 @@ namespace documents {
                             }
                             let fileData: ibas.FileData = opRslt.resultObjects.firstOrDefault();
                             if (!ibas.objects.isNull(fileData)) {
-                                that.editData.fileName = fileData.originalName;
-                                that.editData.fileSign = fileData.fileName;
+                                that.editData.name = fileData.originalName;
+                                that.editData.sign = fileData.fileName;
                                 that.messages(ibas.emMessageType.SUCCESS,
                                     ibas.i18n.prop("shell_upload") + ibas.i18n.prop("shell_sucessful"));
                             }
@@ -207,7 +207,7 @@ namespace documents {
                 let criteria: ibas.ICriteria = new ibas.Criteria();
                 let condition: ibas.ICondition = criteria.conditions.create();
                 condition.alias = ibas.CRITERIA_CONDITION_ALIAS_FILE_NAME;
-                condition.value = this.editData.fileSign;
+                condition.value = this.editData.sign;
                 let that: this = this;
                 let boRepository: bo.BORepositoryDocuments = new bo.BORepositoryDocuments();
                 boRepository.download({
@@ -220,7 +220,7 @@ namespace documents {
                             }
                             let data: Blob = opRslt.resultObjects.firstOrDefault();
                             if (!ibas.objects.isNull(data)) {
-                                ibas.files.save(data, that.editData.fileName);
+                                ibas.files.save(data, that.editData.name);
                             }
                         } catch (error) {
                             that.messages(error);

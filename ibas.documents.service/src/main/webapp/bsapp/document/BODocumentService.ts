@@ -91,8 +91,8 @@ namespace documents {
                             let fileData: ibas.FileData = opRslt.resultObjects.firstOrDefault();
                             if (!ibas.objects.isNull(fileData)) {
                                 let document: bo.Document = new bo.Document();
-                                document.fileName = fileData.originalName;
-                                document.fileSign = fileData.fileName;
+                                document.name = fileData.originalName;
+                                document.sign = fileData.fileName;
                                 document.boKeys = that.bo.toString();
                                 boRepository.saveDocument({
                                     beSaved: document,
@@ -127,7 +127,7 @@ namespace documents {
                 let criteria: ibas.ICriteria = new ibas.Criteria();
                 let condition: ibas.ICondition = criteria.conditions.create();
                 condition.alias = ibas.CRITERIA_CONDITION_ALIAS_FILE_NAME;
-                condition.value = document.fileSign;
+                condition.value = document.sign;
                 let that: this = this;
                 let boRepository: bo.BORepositoryDocuments = new bo.BORepositoryDocuments();
                 boRepository.download({
@@ -140,7 +140,7 @@ namespace documents {
                             }
                             let data: Blob = opRslt.resultObjects.firstOrDefault();
                             if (!ibas.objects.isNull(data)) {
-                                ibas.files.save(data, document.fileName);
+                                ibas.files.save(data, document.name);
                             }
                         } catch (error) {
                             that.messages(error);

@@ -215,26 +215,26 @@ namespace documents {
                 this.setProperty(Document.PROPERTY_ACTIVATED_NAME, value);
             }
 
-            /** 映射的属性名称-文件标识 */
-            static PROPERTY_FILESIGN_NAME: string = "FileSign";
-            /** 获取-文件标识 */
-            get fileSign(): string {
-                return this.getProperty<string>(Document.PROPERTY_FILESIGN_NAME);
+            /** 映射的属性名称-标识 */
+            static PROPERTY_SIGN_NAME: string = "Sign";
+            /** 获取-标识 */
+            get sign(): string {
+                return this.getProperty<string>(Document.PROPERTY_SIGN_NAME);
             }
-            /** 设置-文件标识 */
-            set fileSign(value: string) {
-                this.setProperty(Document.PROPERTY_FILESIGN_NAME, value);
+            /** 设置-标识 */
+            set sign(value: string) {
+                this.setProperty(Document.PROPERTY_SIGN_NAME, value);
             }
 
-            /** 映射的属性名称-文件名称 */
-            static PROPERTY_FILENAME_NAME: string = "FileName";
-            /** 获取-文件名称 */
-            get fileName(): string {
-                return this.getProperty<string>(Document.PROPERTY_FILENAME_NAME);
+            /** 映射的属性名称-名称 */
+            static PROPERTY_NAME_NAME: string = "Name";
+            /** 获取-名称 */
+            get name(): string {
+                return this.getProperty<string>(Document.PROPERTY_NAME_NAME);
             }
-            /** 设置-文件名称 */
-            set fileName(value: string) {
-                this.setProperty(Document.PROPERTY_FILENAME_NAME, value);
+            /** 设置-名称 */
+            set name(value: string) {
+                this.setProperty(Document.PROPERTY_NAME_NAME, value);
             }
 
             /** 映射的属性名称-版本 */

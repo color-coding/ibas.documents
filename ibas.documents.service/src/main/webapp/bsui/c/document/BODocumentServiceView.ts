@@ -74,7 +74,7 @@ namespace documents {
                             new sap.m.Button("", {
                                 text: ibas.i18n.prop("shell_exit"),
                                 type: sap.m.ButtonType.Transparent,
-                                press: function (): void {
+                                press: function(): void {
                                     that.fireViewEvents(that.closeEvent);
                                 }
                             }),
@@ -89,9 +89,9 @@ namespace documents {
                     for (let item of documents) {
                         this.list.addItem(new sap.m.FeedListItem("", {
                             icon: "sap-icon://document",
-                            text: item.fileName,
+                            text: item.name,
                             info: item.version,
-                            timestamp: item.fileSign,
+                            timestamp: item.sign,
                             iconPress(oControlEvent: sap.ui.base.Event): void {
                                 // 下载资源
                                 that.fireViewEvents(that.downloadFileEvent, item);

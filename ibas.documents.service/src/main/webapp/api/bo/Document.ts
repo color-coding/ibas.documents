@@ -64,11 +64,11 @@ namespace documents {
             /** 已激活的 */
             activated: ibas.emYesNo;
 
-            /** 文件标识 */
-            fileSign: string;
+            /** 标识 */
+            sign: string;
 
-            /** 文件名称 */
-            fileName: string;
+            /** 名称 */
+            name: string;
 
             /** 版本 */
             version: string;

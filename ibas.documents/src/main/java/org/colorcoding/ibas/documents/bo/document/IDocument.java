@@ -282,34 +282,34 @@ public interface IDocument extends IBOSimple {
 	void setActivated(emYesNo value);
 
 	/**
-	 * 获取-文件标识
+	 * 获取-标识
 	 * 
 	 * @return 值
 	 */
-	String getFileSign();
+	String getSign();
 
 	/**
-	 * 设置-文件标识
+	 * 设置-标识
 	 * 
 	 * @param value
 	 *            值
 	 */
-	void setFileSign(String value);
+	void setSign(String value);
 
 	/**
-	 * 获取-文件名称
+	 * 获取-名称
 	 * 
 	 * @return 值
 	 */
-	String getFileName();
+	String getName();
 
 	/**
-	 * 设置-文件名称
+	 * 设置-名称
 	 * 
 	 * @param value
 	 *            值
 	 */
-	void setFileName(String value);
+	void setName(String value);
 
 	/**
 	 * 获取-版本

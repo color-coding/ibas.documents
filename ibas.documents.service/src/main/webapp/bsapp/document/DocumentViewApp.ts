@@ -94,7 +94,7 @@ namespace documents {
                 let criteria: ibas.ICriteria = new ibas.Criteria();
                 let condition: ibas.ICondition = criteria.conditions.create();
                 condition.alias = ibas.CRITERIA_CONDITION_ALIAS_FILE_NAME;
-                condition.value = this.viewData.fileSign;
+                condition.value = this.viewData.sign;
                 let that: this = this;
                 let boRepository: bo.BORepositoryDocuments = new bo.BORepositoryDocuments();
                 boRepository.download({
@@ -107,7 +107,7 @@ namespace documents {
                             }
                             let data: Blob = opRslt.resultObjects.firstOrDefault();
                             if (!ibas.objects.isNull(data)) {
-                                ibas.files.save(data, that.viewData.fileName);
+                                ibas.files.save(data, that.viewData.name);
                             }
                         } catch (error) {
                             that.messages(error);

@@ -28,7 +28,7 @@ namespace documents {
                         editable: true,
                         content: [
                             new sap.ui.core.Title("", { text: ibas.i18n.prop("documents_title_general") }),
-                            new sap.m.Label("", { text: ibas.i18n.prop("bo_document_filename") }),
+                            new sap.m.Label("", { text: ibas.i18n.prop("bo_document_name") }),
                             new sap.ui.unified.FileUploader("", {
                                 name: "file",
                                 width: "100%",
@@ -57,7 +57,7 @@ namespace documents {
                                     });
                                 }
                             }).bindProperty("value", {
-                                path: "/fileName"
+                                path: "/name"
                             }),
                             new sap.m.Label("", { text: ibas.i18n.prop("bo_document_version") }),
                             new sap.m.Input("", {
@@ -105,12 +105,12 @@ namespace documents {
                             }).bindProperty("value", {
                                 path: "/objectCode",
                             }),
-                            new sap.m.Label("", { text: ibas.i18n.prop("bo_document_filesign") }),
+                            new sap.m.Label("", { text: ibas.i18n.prop("bo_document_sign") }),
                             new sap.m.Input("", {
                                 enabled: false,
                                 type: sap.m.InputType.Text
                             }).bindProperty("value", {
-                                path: "/fileSign",
+                                path: "/sign",
                             }),
                             new sap.m.Label("", { text: ibas.i18n.prop("bo_document_bokeys") }),
                             new sap.m.Input("", {

@@ -20,7 +20,7 @@ namespace documents {
             toUrl(document: bo.Document): string {
                 if (!this.address.endsWith("/")) { this.address += "/"; }
                 let url: string = this.address.replace("/services/rest/data/", "/services/rest/file/");
-                url += ibas.strings.format("{0}?token={1}", document.fileSign, this.token);
+                url += ibas.strings.format("{0}?token={1}", document.sign, this.token);
                 return encodeURI(url);
             }
             /**

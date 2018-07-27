@@ -632,67 +632,67 @@ public class Document extends BusinessObject<Document>
 	}
 
 	/**
-	 * 属性名称-文件标识
+	 * 属性名称-标识
 	 */
-	private static final String PROPERTY_FILESIGN_NAME = "FileSign";
+	private static final String PROPERTY_SIGN_NAME = "Sign";
 
 	/**
-	 * 文件标识 属性
+	 * 标识 属性
 	 */
-	@DbField(name = "FileSign", type = DbFieldType.ALPHANUMERIC, table = DB_TABLE_NAME, primaryKey = false)
-	public static final IPropertyInfo<String> PROPERTY_FILESIGN = registerProperty(PROPERTY_FILESIGN_NAME, String.class,
+	@DbField(name = "Sign", type = DbFieldType.ALPHANUMERIC, table = DB_TABLE_NAME, uniqueKey = true)
+	public static final IPropertyInfo<String> PROPERTY_SIGN = registerProperty(PROPERTY_SIGN_NAME, String.class,
 			MY_CLASS);
 
 	/**
-	 * 获取-文件标识
+	 * 获取-标识
 	 * 
 	 * @return 值
 	 */
-	@XmlElement(name = PROPERTY_FILESIGN_NAME)
-	public final String getFileSign() {
-		return this.getProperty(PROPERTY_FILESIGN);
+	@XmlElement(name = PROPERTY_SIGN_NAME)
+	public final String getSign() {
+		return this.getProperty(PROPERTY_SIGN);
 	}
 
 	/**
-	 * 设置-文件标识
+	 * 设置-标识
 	 * 
 	 * @param value
 	 *            值
 	 */
-	public final void setFileSign(String value) {
-		this.setProperty(PROPERTY_FILESIGN, value);
+	public final void setSign(String value) {
+		this.setProperty(PROPERTY_SIGN, value);
 	}
 
 	/**
-	 * 属性名称-文件名称
+	 * 属性名称-名称
 	 */
-	private static final String PROPERTY_FILENAME_NAME = "FileName";
+	private static final String PROPERTY_NAME_NAME = "Name";
 
 	/**
-	 * 文件名称 属性
+	 * 名称 属性
 	 */
-	@DbField(name = "FileName", type = DbFieldType.ALPHANUMERIC, table = DB_TABLE_NAME, primaryKey = false)
-	public static final IPropertyInfo<String> PROPERTY_FILENAME = registerProperty(PROPERTY_FILENAME_NAME, String.class,
+	@DbField(name = "Name", type = DbFieldType.ALPHANUMERIC, table = DB_TABLE_NAME, primaryKey = false)
+	public static final IPropertyInfo<String> PROPERTY_NAME = registerProperty(PROPERTY_NAME_NAME, String.class,
 			MY_CLASS);
 
 	/**
-	 * 获取-文件名称
+	 * 获取-名称
 	 * 
 	 * @return 值
 	 */
-	@XmlElement(name = PROPERTY_FILENAME_NAME)
-	public final String getFileName() {
-		return this.getProperty(PROPERTY_FILENAME);
+	@XmlElement(name = PROPERTY_NAME_NAME)
+	public final String getName() {
+		return this.getProperty(PROPERTY_NAME);
 	}
 
 	/**
-	 * 设置-文件名称
+	 * 设置-名称
 	 * 
 	 * @param value
 	 *            值
 	 */
-	public final void setFileName(String value) {
-		this.setProperty(PROPERTY_FILENAME, value);
+	public final void setName(String value) {
+		this.setProperty(PROPERTY_NAME, value);
 	}
 
 	/**

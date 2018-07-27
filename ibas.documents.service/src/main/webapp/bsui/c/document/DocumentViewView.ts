@@ -48,8 +48,8 @@ namespace documents {
 
                 /** 显示数据 */
                 showDocument(data: bo.Document): void {
-                    this.page.setTitle(ibas.strings.format("{0} - {1}", this.page.getTitle(), data.fileName));
-                    if (data.fileName.toLowerCase().endsWith(".pdf")) {
+                    this.page.setTitle(ibas.strings.format("{0} - {1}", this.page.getTitle(), data.name));
+                    if (data.name.toLowerCase().endsWith(".pdf")) {
                         this.page.addContent(new sap.m.PDFViewer("", {
                             showDownloadButton: false,
                             source: new bo.BORepositoryDocuments().toUrl(data),

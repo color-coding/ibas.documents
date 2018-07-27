@@ -40,11 +40,11 @@ namespace documents {
                                 })
                             }),
                             new sap.ui.table.Column("", {
-                                label: ibas.i18n.prop("bo_document_filename"),
+                                label: ibas.i18n.prop("bo_document_name"),
                                 template: new sap.m.Text("", {
                                     wrapping: false
                                 }).bindProperty("text", {
-                                    path: "fileName"
+                                    path: "name"
                                 })
                             }),
                             new sap.ui.table.Column("", {
