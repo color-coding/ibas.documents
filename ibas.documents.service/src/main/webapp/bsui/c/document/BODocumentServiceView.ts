@@ -74,7 +74,7 @@ namespace documents {
                             new sap.m.Button("", {
                                 text: ibas.i18n.prop("shell_exit"),
                                 type: sap.m.ButtonType.Transparent,
-                                press: function(): void {
+                                press: function (): void {
                                     that.fireViewEvents(that.closeEvent);
                                 }
                             }),
@@ -85,6 +85,7 @@ namespace documents {
                 private listTitle: sap.m.Title;
                 /** 显示文档 */
                 showDocuments(documents: bo.Document[]): void {
+                    this.list.destroyItems();
                     let that: this = this;
                     for (let item of documents) {
                         this.list.addItem(new sap.m.FeedListItem("", {
