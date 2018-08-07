@@ -9,9 +9,9 @@ namespace documents {
     export namespace ui {
         export namespace c {
             /**
-             * 数据服务视图
+             * 文档服务视图
              */
-            export class BODocumentServiceView extends ibas.BODialogView implements app.IBODocumentServiceView {
+            export class DocumentServiceView extends ibas.BODialogView implements app.IDocumentServiceView {
                 /** 上传文件 */
                 uploadFileEvent: Function;
                 /** 下载文件 */

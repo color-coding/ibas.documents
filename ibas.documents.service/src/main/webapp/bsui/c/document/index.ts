@@ -5,7 +5,7 @@
  * Use of this source code is governed by an Apache License, Version 2.0
  * that can be found in the LICENSE file at http://www.apache.org/licenses/LICENSE-2.0
  */
-/// <reference path="./BODocumentServiceView.ts" />
+/// <reference path="./DocumentServiceView.ts" />
 /// <reference path="./DocumentChooseView.ts" />
 /// <reference path="./DocumentEditView.ts" />
 /// <reference path="./DocumentListView.ts" />

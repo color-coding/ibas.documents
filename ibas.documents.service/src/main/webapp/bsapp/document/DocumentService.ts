@@ -7,9 +7,8 @@
  */
 namespace documents {
     export namespace app {
-
         /** 业务对象文档服务 */
-        export class BODocumentService extends ibas.ServiceApplication<IBODocumentServiceView, ibas.IBOServiceContract> {
+        export class DocumentService extends ibas.ServiceApplication<IDocumentServiceView, ibas.IBOServiceContract> {
             /** 应用标识 */
             static APPLICATION_ID: string = "bda600a8-7d36-4e7e-97cd-364fb032b752";
             /** 应用名称 */
@@ -17,8 +16,8 @@ namespace documents {
 
             constructor() {
                 super();
-                this.id = BODocumentService.APPLICATION_ID;
-                this.name = BODocumentService.APPLICATION_NAME;
+                this.id = DocumentService.APPLICATION_ID;
+                this.name = DocumentService.APPLICATION_NAME;
                 this.description = ibas.i18n.prop(this.name);
             }
             /** 注册视图 */
@@ -56,7 +55,7 @@ namespace documents {
             }
             /** 运行服务 */
             runService(contract: ibas.IBOServiceContract): void {
-                if (!ibas.objects.isNull(contract) && !ibas.objects.isNull(contract.data)) {
+                if (!ibas.objects.isNull(contract)) {
                     // 传入的数据可能是数组
                     if (contract.data instanceof Array) {
                         // 数组只处理第一个
@@ -64,11 +63,13 @@ namespace documents {
                     } else {
                         this.bo = contract.data;
                     }
-                    super.show();
-                } else {
+                }
+                if (ibas.objects.isNull(this.bo)) {
                     // 输入数据无效，服务不运行
                     this.proceeding(ibas.emMessageType.WARNING,
                         ibas.i18n.prop("documents_bo_document_service") + ibas.i18n.prop("sys_invalid_parameter", "data"));
+                } else {
+                    super.show();
                 }
             }
             /** 关联的数据 */
@@ -151,7 +152,7 @@ namespace documents {
             }
         }
         /** 业务对象文档服务-视图 */
-        export interface IBODocumentServiceView extends ibas.IView {
+        export interface IDocumentServiceView extends ibas.IView {
             /** 显示关联对象 */
             showBusinessObject(bo: ibas.IBusinessObject): void;
             /** 显示已存在文档 */
@@ -162,19 +163,19 @@ namespace documents {
             downloadFileEvent: Function;
         }
         /** 业务对象文档服务映射 */
-        export class BODocumentServiceMapping extends ibas.ServiceMapping {
+        export class DocumentServiceMapping extends ibas.ServiceMapping {
 
             constructor() {
                 super();
-                this.id = BODocumentService.APPLICATION_ID;
-                this.name = BODocumentService.APPLICATION_NAME;
+                this.id = DocumentService.APPLICATION_ID;
+                this.name = DocumentService.APPLICATION_NAME;
                 this.description = ibas.i18n.prop(this.name);
                 this.proxy = ibas.BOServiceProxy;
                 this.icon = ibas.i18n.prop("documents_bo_document_icon");
             }
             /** 创建服务实例 */
             create(): ibas.IService<ibas.IServiceContract> {
-                return new BODocumentService();
+                return new DocumentService();
             }
         }
     }

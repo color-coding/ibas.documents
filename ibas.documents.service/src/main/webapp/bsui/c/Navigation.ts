@@ -35,8 +35,8 @@ namespace documents {
                     case app.DocumentEditApp.APPLICATION_ID:
                         view = new c.DocumentEditView();
                         break;
-                    case app.BODocumentService.APPLICATION_ID:
-                        view = new c.BODocumentServiceView();
+                    case app.DocumentService.APPLICATION_ID:
+                        view = new c.DocumentServiceView();
                         break;
                     default:
                         break;
