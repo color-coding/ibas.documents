@@ -71,13 +71,6 @@ namespace documents {
                             }).bindProperty("value", {
                                 path: "/tags"
                             }),
-                            new sap.m.Label("", { text: ibas.i18n.prop("bo_document_activated") }),
-                            new sap.m.Select("", {
-                                items: openui5.utils.createComboBoxItems(ibas.emYesNo)
-                            }).bindProperty("selectedKey", {
-                                path: "/activated",
-                                type: "sap.ui.model.type.Integer"
-                            }),
                             new sap.m.Label("", { text: ibas.i18n.prop("bo_document_reference1") }),
                             new sap.m.Input("", {
                                 type: sap.m.InputType.Text
@@ -118,6 +111,16 @@ namespace documents {
                                 type: sap.m.InputType.Text
                             }).bindProperty("value", {
                                 path: "/boKeys",
+                                formatter(data: any): any {
+                                    return ibas.businessobjects.describe(data);
+                                }
+                            }),
+                            new sap.m.Label("", { text: ibas.i18n.prop("bo_document_activated") }),
+                            new sap.m.Select("", {
+                                items: openui5.utils.createComboBoxItems(ibas.emYesNo)
+                            }).bindProperty("selectedKey", {
+                                path: "/activated",
+                                type: "sap.ui.model.type.Integer"
                             }),
                         ]
                     });

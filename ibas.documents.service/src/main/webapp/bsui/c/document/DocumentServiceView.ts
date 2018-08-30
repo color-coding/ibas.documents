@@ -102,11 +102,7 @@ namespace documents {
                 }
                 /** 显示关联对象 */
                 showBusinessObject(bo: ibas.IBusinessObject): void {
-                    let text: string = bo.toString();
-                    if (text.startsWith("{") && text.endsWith("}")) {
-                        text = text.substring(1, text.length - 1);
-                    }
-                    this.listTitle.setText(ibas.i18n.prop("documents_bo_title", text));
+                    this.listTitle.setText(ibas.i18n.prop("documents_bo_title", ibas.businessobjects.describe(bo.toString())));
                 }
 
             }

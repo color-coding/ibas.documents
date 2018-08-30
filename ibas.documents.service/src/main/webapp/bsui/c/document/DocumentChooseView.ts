@@ -54,19 +54,22 @@ namespace documents {
                                 })
                             }),
                             new sap.ui.table.Column("", {
+                                label: ibas.i18n.prop("bo_document_bokeys"),
+                                template: new sap.m.Text("", {
+                                    wrapping: false
+                                }).bindProperty("text", {
+                                    path: "boKeys",
+                                    formatter(data: any): any {
+                                        return ibas.businessobjects.describe(data);
+                                    }
+                                })
+                            }),
+                            new sap.ui.table.Column("", {
                                 label: ibas.i18n.prop("bo_document_version"),
                                 template: new sap.m.Text("", {
                                     wrapping: false
                                 }).bindProperty("text", {
                                     path: "version"
-                                })
-                            }),
-                            new sap.ui.table.Column("", {
-                                label: ibas.i18n.prop("bo_document_bokeys"),
-                                template: new sap.m.Text("", {
-                                    wrapping: false
-                                }).bindProperty("text", {
-                                    path: "boKeys"
                                 })
                             }),
                             new sap.ui.table.Column("", {
@@ -77,6 +80,7 @@ namespace documents {
                                     path: "tags"
                                 })
                             }),
+                            /*
                             new sap.ui.table.Column("", {
                                 label: ibas.i18n.prop("bo_document_reference1"),
                                 template: new sap.m.Text("", {
@@ -93,6 +97,7 @@ namespace documents {
                                     path: "reference2"
                                 })
                             }),
+                            */
                         ]
                     });
                     // 调整选择样式风格
