@@ -24,6 +24,7 @@ namespace documents {
                             contentLeft: [
                                 new sap.m.Button("", {
                                     text: ibas.i18n.prop("shell_data_edit"),
+                                    visible: this.mode === ibas.emViewMode.VIEW ? false : true,
                                     type: sap.m.ButtonType.Transparent,
                                     icon: "sap-icon://edit",
                                     press: function (): void {
