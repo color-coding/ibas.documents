@@ -20,7 +20,7 @@
     <Property Name="Organization" Description="数据所属组织" DataType="Alphanumeric" DataSubType="Default" EditSize="8" Mapped="OrgCode"/>
     <Property Name="ApprovalStatus" Description="审批状态" DataType="Alphanumeric" DataSubType="Default" EditSize="1" DeclaredType="emApprovalStatus" Mapped="ApvlStatus"/>
     <Property Name="Activated" Description="已激活的" DataType="Alphanumeric" DataSubType="Default" EditSize="1" DeclaredType="emYesNo" Mapped="Activated"/>
-    <Property Name="Sign" Description="标识" DataType="Alphanumeric" DataSubType="Default" EditSize="60" Mapped="Sign" UniqueKey="Yes"/>
+    <Property Name="Sign" Description="标识" DataType="Alphanumeric" DataSubType="Default" EditSize="60" Mapped="Sign"/>
     <Property Name="Name" Description="名称" DataType="Alphanumeric" DataSubType="Default" EditSize="200" Mapped="Name"/>
     <Property Name="Version" Description="版本" DataType="Alphanumeric" DataSubType="Default" EditSize="10" Mapped="Version"/>
     <Property Name="Tags" Description="标签" DataType="Alphanumeric" DataSubType="Default" EditSize="100" Mapped="Tags"/>

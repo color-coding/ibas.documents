@@ -20,13 +20,13 @@ namespace documents {
                 draw(): any {
                     let that: this = this;
                     this.listTitle = new sap.m.Title("", {
-                        level: sap.ui.core.TitleLevel.H4
+                        titleStyle: sap.ui.core.TitleLevel.H5
                     });
                     this.list = new sap.m.List("", {
                         headerToolbar: new sap.m.Toolbar("", {
                             content: [
                                 this.listTitle,
-                                new sap.m.ToolbarSpacer("", { width: "80px" }),
+                                new sap.m.ToolbarSpacer("", {}),
                                 new sap.ui.unified.FileUploader("", {
                                     name: "file",
                                     width: "auto",
