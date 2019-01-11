@@ -11,7 +11,7 @@ namespace documents {
             /**
              * 文档服务视图
              */
-            export class DocumentServiceView extends ibas.BODialogView implements app.IDocumentServiceView {
+            export class DocumentServiceView extends ibas.DialogView implements app.IDocumentServiceView {
                 /** 上传文件 */
                 uploadFileEvent: Function;
                 /** 下载文件 */
