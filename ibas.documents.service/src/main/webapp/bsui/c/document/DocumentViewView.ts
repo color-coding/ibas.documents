@@ -12,13 +12,12 @@ namespace documents {
              * 视图-Document
              */
             export class DocumentViewView extends ibas.BOViewView implements app.IDocumentViewView {
-
                 /** 下载文件 */
                 downloadFileEvent: Function;
                 /** 绘制视图 */
                 draw(): any {
                     let that: this = this;
-                    this.page = new sap.m.Page("", {
+                    return this.page = new sap.extension.m.Page("", {
                         showHeader: false,
                         subHeader: new sap.m.Bar("", {
                             contentLeft: [
@@ -42,10 +41,8 @@ namespace documents {
                             ],
                         }),
                     });
-                    this.id = this.page.getId();
-                    return this.page;
                 }
-                private page: sap.m.Page;
+                private page: sap.extension.m.Page;
 
                 /** 显示数据 */
                 showDocument(data: bo.Document): void {
