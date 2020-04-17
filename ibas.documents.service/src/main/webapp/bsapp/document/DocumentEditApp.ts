@@ -92,8 +92,6 @@ namespace documents {
                 }
                 super.run.apply(this, arguments);
             }
-            /** 待编辑的数据 */
-            protected editData: bo.Document;
             /** 保存数据 */
             protected saveData(): void {
                 this.busy(true);
