@@ -144,6 +144,7 @@ namespace documents {
                             }
                             that.busy(false);
                         });
+                        that.busy(true);
                     }
                 });
             }
