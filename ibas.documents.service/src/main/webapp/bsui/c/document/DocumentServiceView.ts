@@ -16,6 +16,8 @@ namespace documents {
                 uploadFileEvent: Function;
                 /** 下载文件 */
                 downloadFileEvent: Function;
+                /** 删除事件 */
+                deleteEvent: Function;
                 /** 绘制视图 */
                 draw(): any {
                     let that: this = this;
@@ -59,6 +61,29 @@ namespace documents {
                                 }),
                             ]
                         }),
+                        mode: sap.m.ListMode.Delete,
+                        delete(event: sap.ui.base.Event): void {
+                            let listItem: any = event.getParameter("listItem");
+                            if (listItem instanceof sap.m.FeedListItem) {
+                                that.fireViewEvents(that.deleteEvent, listItem.getBindingContext().getObject());
+                            }
+                        },
+                        items: {
+                            path: "/rows",
+                            template: new sap.m.FeedListItem("", {
+                                icon: "sap-icon://document",
+                                text: "{name}",
+                                info: "{version}",
+                                timestamp: "{sign}",
+                                iconPress(event: sap.ui.base.Event): void {
+                                    // 下载资源
+                                    let listItem: any = event.getSource();
+                                    if (listItem instanceof sap.m.FeedListItem) {
+                                        that.fireViewEvents(that.downloadFileEvent, listItem.getBindingContext().getObject());
+                                    }
+                                },
+                            })
+                        },
                     });
                     return new sap.extension.m.Dialog("", {
                         title: this.title,
@@ -85,20 +110,7 @@ namespace documents {
                 private listTitle: sap.m.Title;
                 /** 显示文档 */
                 showDocuments(documents: bo.Document[]): void {
-                    this.list.destroyItems();
-                    let that: this = this;
-                    for (let item of documents) {
-                        this.list.addItem(new sap.m.FeedListItem("", {
-                            icon: "sap-icon://document",
-                            text: item.name,
-                            info: item.version,
-                            timestamp: item.sign,
-                            iconPress(oControlEvent: sap.ui.base.Event): void {
-                                // 下载资源
-                                that.fireViewEvents(that.downloadFileEvent, item);
-                            }
-                        }));
-                    }
+                    this.list.setModel(new sap.extension.model.JSONModel({ rows: documents }));
                 }
                 /** 显示关联对象 */
                 showBusinessObject(bo: ibas.IBusinessObject): void {

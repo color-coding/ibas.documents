@@ -25,6 +25,7 @@ namespace documents {
                 super.registerView();
                 this.view.uploadFileEvent = this.uploadFile;
                 this.view.downloadFileEvent = this.downloadFile;
+                this.view.deleteEvent = this.delete;
             }
             /** 视图显示后 */
             protected viewShowed(): void {
@@ -150,6 +151,46 @@ namespace documents {
                 });
                 this.proceeding(ibas.emMessageType.INFORMATION, ibas.i18n.prop("shell_downloading_file"));
             }
+            /** 删除文档事件 */
+            delete(data: bo.Document): void {
+                // 没有选择删除的对象
+                if (ibas.objects.isNull(data) || data.isNew) {
+                    this.messages(ibas.emMessageType.WARNING, ibas.i18n.prop("shell_please_chooose_data",
+                        ibas.i18n.prop("shell_data_delete")
+                    ));
+                    return;
+                }
+                if (ibas.variablesManager.getValue(ibas.VARIABLE_NAME_USER_ID) !== data.dataOwner
+                    && ibas.variablesManager.getValue(ibas.VARIABLE_NAME_USER_SUPER) !== true) {
+                    this.messages(ibas.emMessageType.WARNING, ibas.i18n.prop("sys_unsupported_operation"));
+                    return;
+                }
+                let that: this = this;
+                this.messages({
+                    type: ibas.emMessageType.QUESTION,
+                    title: ibas.i18n.prop(this.name),
+                    message: ibas.i18n.prop("shell_delete_continue"),
+                    actions: [ibas.emMessageAction.YES, ibas.emMessageAction.NO],
+                    onCompleted(action: ibas.emMessageAction): void {
+                        if (action === ibas.emMessageAction.YES) {
+                            data.delete();
+                            let boRepository: bo.BORepositoryDocuments = new bo.BORepositoryDocuments();
+                            boRepository.saveDocument({
+                                beSaved: data,
+                                onCompleted(opRslt: ibas.IOperationResult<bo.Document>): void {
+                                    if (opRslt.resultCode !== 0) {
+                                        that.messages(ibas.emMessageType.ERROR, opRslt.message);
+                                    } else {
+                                        that.messages(ibas.emMessageType.SUCCESS, ibas.i18n.prop("shell_data_delete") + ibas.i18n.prop("shell_sucessful"));
+                                        that.viewShowed();
+                                    }
+                                }
+                            });
+                            that.proceeding(ibas.emMessageType.INFORMATION, ibas.i18n.prop("shell_data_deleting", data));
+                        }
+                    }
+                });
+            }
         }
         /** 业务对象文档服务-视图 */
         export interface IDocumentServiceView extends ibas.IView {
@@ -161,6 +202,8 @@ namespace documents {
             uploadFileEvent: Function;
             /** 下载文件 */
             downloadFileEvent: Function;
+            /** 删除事件 */
+            deleteEvent: Function;
         }
         /** 业务对象文档服务映射 */
         export class DocumentServiceMapping extends ibas.ServiceMapping {
