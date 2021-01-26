@@ -71,5 +71,12 @@ namespace documents {
                 });
             }
         }
+        /** 模块控制台，手机端 */
+        export class ConsolePhone extends Console {
+            /** 初始化 */
+            protected registers(): void {
+                this.register(new DocumentServiceMapping());
+            }
+        }
     }
 }
