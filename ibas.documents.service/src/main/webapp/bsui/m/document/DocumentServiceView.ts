@@ -85,7 +85,7 @@ namespace documents {
                             })
                         },
                     });
-                    return new sap.extension.m.Dialog("", {
+                    return new sap.m.Dialog("", {
                         title: this.title,
                         type: sap.m.DialogType.Standard,
                         state: sap.ui.core.ValueState.None,
@@ -104,7 +104,7 @@ namespace documents {
                                 }
                             }),
                         ],
-                    });
+                    }).addStyleClass("sapUiNoContentPadding");
                 }
                 private list: sap.m.List;
                 private listTitle: sap.m.Title;
