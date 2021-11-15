@@ -14,12 +14,10 @@ namespace documents {
             export class DocumentEditView extends ibas.BOEditView implements app.IDocumentEditView {
                 /** 删除数据事件 */
                 deleteDataEvent: Function;
-                /** 新建数据事件，参数1：是否克隆 */
-                createDataEvent: Function;
+                /** 查看数据 */
+                viewDataEvent: Function;
                 /** 上传文件 */
                 uploadFileEvent: Function;
-                /** 下载文件 */
-                downloadFileEvent: Function;
                 /** 绘制视图 */
                 draw(): any {
                     let that: this = this;
@@ -28,35 +26,10 @@ namespace documents {
                         content: [
                             new sap.ui.core.Title("", { text: ibas.i18n.prop("documents_title_general") }),
                             new sap.m.Label("", { text: ibas.i18n.prop("bo_document_name") }),
-                            new sap.ui.unified.FileUploader("", {
-                                name: "file",
-                                width: "100%",
-                                placeholder: ibas.i18n.prop("shell_browse"),
-                                change(event: sap.ui.base.Event): void {
-                                    if (ibas.objects.isNull(event.getParameters())
-                                        || ibas.objects.isNull(event.getParameters().files)
-                                        || event.getParameters().files.length === 0) {
-                                        return;
-                                    }
-                                    let fileData: FormData = new FormData();
-                                    fileData.append("file", event.getParameters().files[0], encodeURI(event.getParameters().newValue));
-                                    that.application.viewShower.messages({
-                                        type: ibas.emMessageType.QUESTION,
-                                        title: that.application.description,
-                                        actions: [
-                                            ibas.emMessageAction.YES,
-                                            ibas.emMessageAction.NO
-                                        ],
-                                        message: ibas.i18n.prop("documents_whether_upload_file"),
-                                        onCompleted(action: ibas.emMessageAction): void {
-                                            if (action === ibas.emMessageAction.YES) {
-                                                that.fireViewEvents(that.uploadFileEvent, fileData);
-                                            }
-                                        }
-                                    });
-                                }
-                            }).bindProperty("value", {
-                                path: "name"
+                            new sap.extension.m.Input("", {
+                            }).bindProperty("bindingValue", {
+                                path: "name",
+                                type: new sap.extension.data.Alphanumeric()
                             }),
                             new sap.m.Label("", { text: ibas.i18n.prop("bo_document_version") }),
                             new sap.extension.m.Input("", {
@@ -67,12 +40,152 @@ namespace documents {
                                 })
                             }),
                             new sap.m.Label("", { text: ibas.i18n.prop("bo_document_tags") }),
-                            new sap.extension.m.Input("", {
+                            new sap.extension.m.MultiComboBox("", {
+                                loadItems(this: sap.m.MultiComboBox): void {
+                                    let boRepository: shell.bo.IBORepositoryShell = ibas.boFactory.create(shell.bo.BO_REPOSITORY_SHELL);
+                                    boRepository.fetchBizObjectInfo({
+                                        user: ibas.variablesManager.getValue(ibas.VARIABLE_NAME_USER_CODE),
+                                        boCode: ibas.config.applyVariables(bo.Document.BUSINESS_OBJECT_CODE),
+                                        onCompleted: (opRslt) => {
+                                            try {
+                                                if (opRslt.resultCode !== 0) {
+                                                    throw new Error(opRslt.message);
+                                                }
+                                                for (let data of opRslt.resultObjects) {
+                                                    for (let property of data.properties) {
+                                                        if (ibas.strings.equalsIgnoreCase(bo.Document.PROPERTY_TAGS_NAME, property.name)) {
+                                                            if (property.values instanceof Array) {
+                                                                for (let item of property.values) {
+                                                                    if (ibas.strings.isEmpty(item.value)) {
+                                                                        continue;
+                                                                    }
+                                                                    this.addItem(new sap.extension.m.SelectItem("", {
+                                                                        key: item.value,
+                                                                        text: ibas.strings.isEmpty(item.description) ? item.value : item.description,
+                                                                    }));
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                    return;
+                                                }
+                                            } catch (error) {
+                                                ibas.logger.log(error);
+                                            }
+                                        }
+                                    });
+                                }
                             }).bindProperty("bindingValue", {
                                 path: "tags",
+                                type: new sap.extension.data.Alphanumeric()
+                            }),
+                            new sap.m.Label("", { text: ibas.i18n.prop("bo_document_dataowner") }),
+                            new sap.extension.m.DataOwnerInput("", {
+                                showValueHelp: true,
+                            }).bindProperty("bindingValue", {
+                                path: "dataOwner",
+                                type: new sap.extension.data.Numeric()
+                            }),
+                            new sap.m.Label("", { text: ibas.i18n.prop("bo_document_teammembers") }),
+                            new sap.extension.m.UserInput("", {
+                                showValueHelp: true,
+                                chooseType: ibas.emChooseType.MULTIPLE,
+                            }).bindProperty("bindingValue", {
+                                path: "teamMembers",
+                                type: new sap.extension.data.Alphanumeric()
+                            }),
+                            new sap.m.Label("", { text: ibas.i18n.prop("bo_document_organization") }),
+                            new sap.extension.m.DataOrganizationInput("", {
+                                showValueHelp: true,
+                            }).bindProperty("bindingValue", {
+                                path: "organization",
                                 type: new sap.extension.data.Alphanumeric({
-                                    maxLength: 100
+                                    maxLength: 8
                                 })
+                            }),
+                            new sap.m.Label("", { text: ibas.i18n.prop("bo_document_remarks") }),
+                            new sap.extension.m.TextArea("", {
+                                rows: 3
+                            }).bindProperty("bindingValue", {
+                                path: "remarks",
+                                type: new sap.extension.data.Alphanumeric()
+                            }),
+                            new sap.ui.core.Title("", { text: ibas.i18n.prop("documents_title_others") }),
+                            new sap.m.Label("", { text: ibas.i18n.prop("bo_document_sign") }),
+                            new sap.extension.m.Input("", {
+                                editable: false,
+                            }).bindProperty("bindingValue", {
+                                path: "sign",
+                                type: new sap.extension.data.Alphanumeric({
+                                    maxLength: 60
+                                })
+                            }),
+                            new sap.extension.m.CheckBox("", {
+                                text: ibas.i18n.prop("bo_document_activated"),
+                            }).bindProperty("bindingValue", {
+                                path: "activated",
+                                type: new sap.extension.data.YesNo()
+                            }),
+                            new sap.m.Label("", { text: ibas.i18n.prop("bo_document_bokeys") }),
+                            new sap.m.FlexBox("", {
+                                width: "100%",
+                                justifyContent: sap.m.FlexJustifyContent.Start,
+                                renderType: sap.m.FlexRendertype.Bare,
+                                items: [
+                                    new sap.extension.m.Input("", {
+                                        editable: false,
+                                    }).bindProperty("bindingValue", {
+                                        path: "boKeys",
+                                        formatter(data: any): any {
+                                            return ibas.businessobjects.describe(data);
+                                        }
+                                    }),
+                                    new sap.m.Button("", {
+                                        width: "auto",
+                                        icon: "sap-icon://detail-view",
+                                        press(this: sap.m.Button): void {
+                                            let boKeys: string = this.getBindingContext()?.getObject()?.boKeys;
+                                            if (!ibas.strings.isEmpty(boKeys)) {
+                                                let criteria: ibas.ICriteria = ibas.criterias.valueOf(boKeys);
+                                                if (!ibas.objects.isNull(criteria)) {
+                                                    let done: boolean = ibas.servicesManager.runLinkService({
+                                                        boCode: criteria.businessObject,
+                                                        linkValue: criteria
+                                                    });
+                                                    if (!done) {
+                                                        that.application.viewShower.proceeding(
+                                                            that,
+                                                            ibas.emMessageType.WARNING,
+                                                            ibas.i18n.prop("documents_not_found_businessojbect_link_service",
+                                                                ibas.businessobjects.describe(criteria.businessObject))
+                                                        );
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }).addStyleClass("sapUiTinyMarginBegin"),
+                                ]
+                            }),
+                            new sap.m.Label("", { text: ibas.i18n.prop("bo_document_url") }),
+                            new sap.m.FlexBox("", {
+                                width: "100%",
+                                justifyContent: sap.m.FlexJustifyContent.Start,
+                                renderType: sap.m.FlexRendertype.Bare,
+                                items: [
+                                    this.urlInput = new sap.extension.m.Input("", {
+                                        editable: false,
+                                        bindingValue: "{=${}.url()}",
+                                    }),
+                                    new sap.m.Button("", {
+                                        width: "auto",
+                                        icon: "sap-icon://copy",
+                                        press(): void {
+                                            let target: any = document.getElementById(that.urlInput.getId() + "-inner");
+                                            target.select(); // 选择文本
+                                            document.execCommand("Copy"); // 执行浏览器复制命令
+                                        }
+                                    }).addStyleClass("sapUiTinyMarginBegin"),
+                                ]
                             }),
                             new sap.m.Label("", { text: ibas.i18n.prop("bo_document_reference1") }),
                             new sap.extension.m.Input("", {
@@ -89,32 +202,6 @@ namespace documents {
                                 type: new sap.extension.data.Alphanumeric({
                                     maxLength: 200
                                 })
-                            }),
-                            new sap.ui.core.Title("", { text: ibas.i18n.prop("documents_title_others") }),
-                            new sap.m.Label("", { text: ibas.i18n.prop("bo_document_activated") }),
-                            new sap.extension.m.EnumSelect("", {
-                                enumType: ibas.emYesNo
-                            }).bindProperty("bindingValue", {
-                                path: "activated",
-                                type: new sap.extension.data.YesNo()
-                            }),
-                            new sap.m.Label("", { text: ibas.i18n.prop("bo_document_sign") }),
-                            new sap.extension.m.Input("", {
-                                editable: false,
-                            }).bindProperty("bindingValue", {
-                                path: "sign",
-                                type: new sap.extension.data.Alphanumeric({
-                                    maxLength: 60
-                                })
-                            }),
-                            new sap.m.Label("", { text: ibas.i18n.prop("bo_document_bokeys") }),
-                            new sap.extension.m.Input("", {
-                                editable: false,
-                            }).bindProperty("bindingValue", {
-                                path: "boKeys",
-                                formatter(data: any): any {
-                                    return ibas.businessobjects.describe(data);
-                                }
                             }),
                         ]
                     });
@@ -143,11 +230,22 @@ namespace documents {
                                 }),
                                 new sap.m.ToolbarSeparator(""),
                                 new sap.m.Button("", {
-                                    text: ibas.i18n.prop("documents_download_file"),
+                                    text: ibas.i18n.prop("documents_upload_document"),
                                     type: sap.m.ButtonType.Transparent,
-                                    icon: "sap-icon://download",
+                                    icon: "sap-icon://upload",
                                     press: function (): void {
-                                        that.fireViewEvents(that.downloadFileEvent);
+                                        ibas.files.open((files) => {
+                                            that.fireViewEvents(that.uploadFileEvent, files[0]);
+                                        }, { multiple: false });
+                                    }
+                                }),
+                                new sap.m.ToolbarSpacer(""),
+                                new sap.m.Button("", {
+                                    type: sap.m.ButtonType.Transparent,
+                                    icon: "sap-icon://inspection",
+                                    text: ibas.i18n.prop("documents_view_file"),
+                                    press: function (): void {
+                                        that.fireViewEvents(that.viewDataEvent);
                                     }
                                 }),
                             ]
@@ -158,6 +256,7 @@ namespace documents {
                     });
                 }
                 private page: sap.extension.m.Page;
+                private urlInput: sap.extension.m.Input;
 
                 /** 显示数据 */
                 showDocument(data: bo.Document): void {
@@ -167,5 +266,6 @@ namespace documents {
                 }
             }
         }
+
     }
 }

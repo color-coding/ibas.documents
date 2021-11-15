@@ -26,6 +26,8 @@
         "bo_document_bokeys": "业务对象标识",
         "bo_document_reference1": "参考1",
         "bo_document_reference2": "参考2",
+        "bo_document_remarks": "备注",
+        "bo_document_url": "文件地址",
         "bo_document_closing_delimiter": "----结束----"
     }
 ]

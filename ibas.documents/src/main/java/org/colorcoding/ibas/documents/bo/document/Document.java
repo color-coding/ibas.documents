@@ -10,14 +10,16 @@ import org.colorcoding.ibas.bobas.approval.IApprovalData;
 import org.colorcoding.ibas.bobas.bo.BusinessObject;
 import org.colorcoding.ibas.bobas.bo.IBOUserFields;
 import org.colorcoding.ibas.bobas.core.IPropertyInfo;
+import org.colorcoding.ibas.bobas.data.ArrayList;
 import org.colorcoding.ibas.bobas.data.DateTime;
 import org.colorcoding.ibas.bobas.data.emApprovalStatus;
 import org.colorcoding.ibas.bobas.data.emYesNo;
 import org.colorcoding.ibas.bobas.mapping.BusinessObjectUnit;
 import org.colorcoding.ibas.bobas.mapping.DbField;
 import org.colorcoding.ibas.bobas.mapping.DbFieldType;
-import org.colorcoding.ibas.bobas.ownership.IDataOwnership;
+import org.colorcoding.ibas.bobas.ownership.ITeamDataOwnership;
 import org.colorcoding.ibas.documents.MyConfiguration;
+import org.colorcoding.ibas.documents.data.DataConvert;
 
 /**
  * 获取-文档
@@ -28,7 +30,7 @@ import org.colorcoding.ibas.documents.MyConfiguration;
 @XmlRootElement(name = Document.BUSINESS_OBJECT_NAME, namespace = MyConfiguration.NAMESPACE_BO)
 @BusinessObjectUnit(code = Document.BUSINESS_OBJECT_CODE)
 public class Document extends BusinessObject<Document>
-		implements IDocument, IDataOwnership, IApprovalData, IBOUserFields {
+		implements IDocument, ITeamDataOwnership, IApprovalData, IBOUserFields {
 
 	/**
 	 * 序列化版本标记
@@ -80,8 +82,7 @@ public class Document extends BusinessObject<Document>
 	/**
 	 * 设置-编号
 	 * 
-	 * @param value
-	 *            值
+	 * @param value 值
 	 */
 	public final void setObjectKey(Integer value) {
 		this.setProperty(PROPERTY_OBJECTKEY, value);
@@ -112,8 +113,7 @@ public class Document extends BusinessObject<Document>
 	/**
 	 * 设置-类型
 	 * 
-	 * @param value
-	 *            值
+	 * @param value 值
 	 */
 	public final void setObjectCode(String value) {
 		this.setProperty(PROPERTY_OBJECTCODE, value);
@@ -144,8 +144,7 @@ public class Document extends BusinessObject<Document>
 	/**
 	 * 设置-实例号（版本）
 	 * 
-	 * @param value
-	 *            值
+	 * @param value 值
 	 */
 	public final void setLogInst(Integer value) {
 		this.setProperty(PROPERTY_LOGINST, value);
@@ -176,8 +175,7 @@ public class Document extends BusinessObject<Document>
 	/**
 	 * 设置-编号系列
 	 * 
-	 * @param value
-	 *            值
+	 * @param value 值
 	 */
 	public final void setSeries(Integer value) {
 		this.setProperty(PROPERTY_SERIES, value);
@@ -208,8 +206,7 @@ public class Document extends BusinessObject<Document>
 	/**
 	 * 设置-数据源
 	 * 
-	 * @param value
-	 *            值
+	 * @param value 值
 	 */
 	public final void setDataSource(String value) {
 		this.setProperty(PROPERTY_DATASOURCE, value);
@@ -240,8 +237,7 @@ public class Document extends BusinessObject<Document>
 	/**
 	 * 设置-创建日期
 	 * 
-	 * @param value
-	 *            值
+	 * @param value 值
 	 */
 	public final void setCreateDate(DateTime value) {
 		this.setProperty(PROPERTY_CREATEDATE, value);
@@ -272,8 +268,7 @@ public class Document extends BusinessObject<Document>
 	/**
 	 * 设置-创建时间
 	 * 
-	 * @param value
-	 *            值
+	 * @param value 值
 	 */
 	public final void setCreateTime(Short value) {
 		this.setProperty(PROPERTY_CREATETIME, value);
@@ -304,8 +299,7 @@ public class Document extends BusinessObject<Document>
 	/**
 	 * 设置-修改日期
 	 * 
-	 * @param value
-	 *            值
+	 * @param value 值
 	 */
 	public final void setUpdateDate(DateTime value) {
 		this.setProperty(PROPERTY_UPDATEDATE, value);
@@ -336,8 +330,7 @@ public class Document extends BusinessObject<Document>
 	/**
 	 * 设置-修改时间
 	 * 
-	 * @param value
-	 *            值
+	 * @param value 值
 	 */
 	public final void setUpdateTime(Short value) {
 		this.setProperty(PROPERTY_UPDATETIME, value);
@@ -368,8 +361,7 @@ public class Document extends BusinessObject<Document>
 	/**
 	 * 设置-创建用户
 	 * 
-	 * @param value
-	 *            值
+	 * @param value 值
 	 */
 	public final void setCreateUserSign(Integer value) {
 		this.setProperty(PROPERTY_CREATEUSERSIGN, value);
@@ -400,8 +392,7 @@ public class Document extends BusinessObject<Document>
 	/**
 	 * 设置-修改用户
 	 * 
-	 * @param value
-	 *            值
+	 * @param value 值
 	 */
 	public final void setUpdateUserSign(Integer value) {
 		this.setProperty(PROPERTY_UPDATEUSERSIGN, value);
@@ -432,8 +423,7 @@ public class Document extends BusinessObject<Document>
 	/**
 	 * 设置-创建动作标识
 	 * 
-	 * @param value
-	 *            值
+	 * @param value 值
 	 */
 	public final void setCreateActionId(String value) {
 		this.setProperty(PROPERTY_CREATEACTIONID, value);
@@ -464,8 +454,7 @@ public class Document extends BusinessObject<Document>
 	/**
 	 * 设置-更新动作标识
 	 * 
-	 * @param value
-	 *            值
+	 * @param value 值
 	 */
 	public final void setUpdateActionId(String value) {
 		this.setProperty(PROPERTY_UPDATEACTIONID, value);
@@ -496,8 +485,7 @@ public class Document extends BusinessObject<Document>
 	/**
 	 * 设置-数据所有者
 	 * 
-	 * @param value
-	 *            值
+	 * @param value 值
 	 */
 	public final void setDataOwner(Integer value) {
 		this.setProperty(PROPERTY_DATAOWNER, value);
@@ -528,8 +516,7 @@ public class Document extends BusinessObject<Document>
 	/**
 	 * 设置-团队成员
 	 * 
-	 * @param value
-	 *            值
+	 * @param value 值
 	 */
 	public final void setTeamMembers(String value) {
 		this.setProperty(PROPERTY_TEAMMEMBERS, value);
@@ -560,8 +547,7 @@ public class Document extends BusinessObject<Document>
 	/**
 	 * 设置-数据所属组织
 	 * 
-	 * @param value
-	 *            值
+	 * @param value 值
 	 */
 	public final void setOrganization(String value) {
 		this.setProperty(PROPERTY_ORGANIZATION, value);
@@ -592,8 +578,7 @@ public class Document extends BusinessObject<Document>
 	/**
 	 * 设置-审批状态
 	 * 
-	 * @param value
-	 *            值
+	 * @param value 值
 	 */
 	public final void setApprovalStatus(emApprovalStatus value) {
 		this.setProperty(PROPERTY_APPROVALSTATUS, value);
@@ -624,8 +609,7 @@ public class Document extends BusinessObject<Document>
 	/**
 	 * 设置-已激活的
 	 * 
-	 * @param value
-	 *            值
+	 * @param value 值
 	 */
 	public final void setActivated(emYesNo value) {
 		this.setProperty(PROPERTY_ACTIVATED, value);
@@ -656,8 +640,7 @@ public class Document extends BusinessObject<Document>
 	/**
 	 * 设置-标识
 	 * 
-	 * @param value
-	 *            值
+	 * @param value 值
 	 */
 	public final void setSign(String value) {
 		this.setProperty(PROPERTY_SIGN, value);
@@ -688,8 +671,7 @@ public class Document extends BusinessObject<Document>
 	/**
 	 * 设置-名称
 	 * 
-	 * @param value
-	 *            值
+	 * @param value 值
 	 */
 	public final void setName(String value) {
 		this.setProperty(PROPERTY_NAME, value);
@@ -720,8 +702,7 @@ public class Document extends BusinessObject<Document>
 	/**
 	 * 设置-版本
 	 * 
-	 * @param value
-	 *            值
+	 * @param value 值
 	 */
 	public final void setVersion(String value) {
 		this.setProperty(PROPERTY_VERSION, value);
@@ -752,8 +733,7 @@ public class Document extends BusinessObject<Document>
 	/**
 	 * 设置-标签
 	 * 
-	 * @param value
-	 *            值
+	 * @param value 值
 	 */
 	public final void setTags(String value) {
 		this.setProperty(PROPERTY_TAGS, value);
@@ -784,8 +764,7 @@ public class Document extends BusinessObject<Document>
 	/**
 	 * 设置-业务对象标识
 	 * 
-	 * @param value
-	 *            值
+	 * @param value 值
 	 */
 	public final void setBOKeys(String value) {
 		this.setProperty(PROPERTY_BOKEYS, value);
@@ -816,8 +795,7 @@ public class Document extends BusinessObject<Document>
 	/**
 	 * 设置-参考1
 	 * 
-	 * @param value
-	 *            值
+	 * @param value 值
 	 */
 	public final void setReference1(String value) {
 		this.setProperty(PROPERTY_REFERENCE1, value);
@@ -848,11 +826,41 @@ public class Document extends BusinessObject<Document>
 	/**
 	 * 设置-参考2
 	 * 
-	 * @param value
-	 *            值
+	 * @param value 值
 	 */
 	public final void setReference2(String value) {
 		this.setProperty(PROPERTY_REFERENCE2, value);
+	}
+
+	/**
+	 * 属性名称-备注
+	 */
+	private static final String PROPERTY_REMARKS_NAME = "Remarks";
+
+	/**
+	 * 备注 属性
+	 */
+	@DbField(name = "Remarks", type = DbFieldType.MEMO, table = DB_TABLE_NAME, primaryKey = false)
+	public static final IPropertyInfo<String> PROPERTY_REMARKS = registerProperty(PROPERTY_REMARKS_NAME, String.class,
+			MY_CLASS);
+
+	/**
+	 * 获取-备注
+	 * 
+	 * @return 值
+	 */
+	@XmlElement(name = PROPERTY_REMARKS_NAME)
+	public final String getRemarks() {
+		return this.getProperty(PROPERTY_REMARKS);
+	}
+
+	/**
+	 * 设置-备注
+	 * 
+	 * @param value 值
+	 */
+	public final void setRemarks(String value) {
+		this.setProperty(PROPERTY_REMARKS, value);
 	}
 
 	/**
@@ -862,7 +870,20 @@ public class Document extends BusinessObject<Document>
 	protected void initialize() {
 		super.initialize();// 基类初始化，不可去除
 		this.setObjectCode(MyConfiguration.applyVariables(BUSINESS_OBJECT_CODE));
+		this.setActivated(emYesNo.YES);
+	}
 
+	@Override
+	public Integer[] getTeamUsers() {
+		ArrayList<Integer> users = new ArrayList<>();
+		if (!DataConvert.isNullOrEmpty(this.getTeamMembers())) {
+			for (String value : this.getTeamMembers().split(",")) {
+				if (DataConvert.isNumeric(value)) {
+					users.add(Integer.valueOf(value));
+				}
+			}
+		}
+		return users.toArray(new Integer[] {});
 	}
 
 }

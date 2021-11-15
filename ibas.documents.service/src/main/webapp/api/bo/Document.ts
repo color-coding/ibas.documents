@@ -84,6 +84,12 @@ namespace documents {
 
             /** 参考2 */
             reference2: string;
+
+            /** 备注 */
+            remarks: string;
+
+            /** 地址 */
+            url(): string;
         }
     }
 

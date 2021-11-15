@@ -31,8 +31,8 @@ namespace documents {
                 this.register(new DocumentFunc());
                 // 注册服务应用
                 this.register(new DocumentChooseServiceMapping());
-                this.register(new DocumentLinkServiceMapping());
                 this.register(new DocumentServiceMapping());
+                this.register(new DocumentViewServiceMapping());
                 // 注册常驻应用
 
             }
@@ -76,6 +76,7 @@ namespace documents {
             /** 初始化 */
             protected registers(): void {
                 this.register(new DocumentServiceMapping());
+                this.register(new DocumentViewServiceMapping());
             }
         }
     }

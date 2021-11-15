@@ -29,4 +29,16 @@ namespace documents {
         /** 业务对象编码-文档 */
         export const BO_CODE_DOCUMENT: string = "${Company}_DC_DOCUMENT";
     }
+    export namespace app {
+        /** 文档查看服务契约 */
+        export interface IDocumentViewServiceContract extends ibas.IServiceContract {
+            /** 文档 */
+            document: bo.IDocument;
+        }
+        /**
+         * 文档查看服务代理
+         */
+        export class DocumentViewServiceProxy extends ibas.ServiceProxy<IDocumentViewServiceContract> {
+        }
+    }
 }

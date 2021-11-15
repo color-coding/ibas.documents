@@ -77,11 +77,7 @@ namespace documents {
                     ));
                     return;
                 }
-                let app: DocumentViewApp = new DocumentViewApp();
-                app.navigation = this.navigation;
-                app.viewShower = this.viewShower;
-                app.run(data);
-
+                app.views(data);
             }
             /** 编辑数据，参数：目标数据 */
             protected editData(data: bo.Document): void {

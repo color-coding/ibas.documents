@@ -7,10 +7,8 @@
  */
 namespace documents {
     export namespace bo {
-
         /** 文档 */
         export class Document extends ibas.BOSimple<Document> implements IDocument {
-
             /** 业务对象编码 */
             static BUSINESS_OBJECT_CODE: string = BO_CODE_DOCUMENT;
             /** 构造函数 */
@@ -292,12 +290,23 @@ namespace documents {
                 this.setProperty(Document.PROPERTY_REFERENCE2_NAME, value);
             }
 
-
-
+            /** 映射的属性名称-备注 */
+            static PROPERTY_REMARKS_NAME: string = "Remarks";
+            /** 获取-备注 */
+            get remarks(): string {
+                return this.getProperty<string>(Document.PROPERTY_REMARKS_NAME);
+            }
+            /** 设置-备注 */
+            set remarks(value: string) {
+                this.setProperty(Document.PROPERTY_REMARKS_NAME, value);
+            }
             /** 初始化数据 */
             protected init(): void {
                 this.objectCode = ibas.config.applyVariables(Document.BUSINESS_OBJECT_CODE);
                 this.activated = ibas.emYesNo.YES;
+            }
+            url(): string {
+                throw new Error("Method not implemented.");
             }
         }
     }

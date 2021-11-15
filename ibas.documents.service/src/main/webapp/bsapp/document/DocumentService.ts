@@ -26,6 +26,7 @@ namespace documents {
                 this.view.uploadFileEvent = this.uploadFile;
                 this.view.downloadFileEvent = this.downloadFile;
                 this.view.deleteEvent = this.delete;
+                this.view.viewFileEvent = this.viewFile;
             }
             /** 视图显示后 */
             protected viewShowed(): void {
@@ -38,6 +39,9 @@ namespace documents {
                 condition = criteria.conditions.create();
                 condition.alias = bo.Document.PROPERTY_BOKEYS_NAME;
                 condition.value = this.bo.toString();
+                let sort: ibas.ISort = criteria.sorts.create();
+                sort.alias = bo.Document.PROPERTY_OBJECTKEY_NAME;
+                sort.sortType = ibas.emSortType.DESCENDING;
                 let that: this = this;
                 let boRepository: bo.BORepositoryDocuments = new bo.BORepositoryDocuments();
                 boRepository.fetchDocument({
@@ -69,6 +73,9 @@ namespace documents {
                     // 输入数据无效，服务不运行
                     this.proceeding(ibas.emMessageType.WARNING,
                         ibas.i18n.prop("documents_bo_document_service") + ibas.i18n.prop("sys_invalid_parameter", "data"));
+                } else if (this.bo instanceof ibas.BusinessObject && this.bo.isNew) {
+                    // 单据未保存，服务不运行
+                    this.messages(ibas.emMessageType.WARNING, ibas.i18n.prop("documents_bo_not_saved"));
                 } else {
                     super.show();
                 }
@@ -76,48 +83,44 @@ namespace documents {
             /** 关联的数据 */
             private bo: ibas.IBusinessObject;
             /** 上传文件 */
-            uploadFile(data: FormData): void {
+            uploadFile(data: File | File[]): void {
                 if (ibas.objects.isNull(data)) {
                     return;
                 }
+                let datas: File[] = ibas.arrays.create(data);
+                if (datas.length === 0) {
+                    return;
+                }
                 this.busy(true);
-                let that: this = this;
-                let boRepository: bo.BORepositoryDocuments = new bo.BORepositoryDocuments();
-                boRepository.upload({
-                    fileData: data,
-                    onCompleted(opRslt: ibas.IOperationResult<ibas.FileData>): void {
-                        try {
-                            if (opRslt.resultCode !== 0) {
-                                throw new Error(opRslt.message);
-                            }
-                            let fileData: ibas.FileData = opRslt.resultObjects.firstOrDefault();
-                            if (!ibas.objects.isNull(fileData)) {
-                                let document: bo.Document = new bo.Document();
-                                document.name = fileData.originalName;
-                                document.sign = fileData.fileName;
-                                document.boKeys = that.bo.toString();
-                                boRepository.saveDocument({
-                                    beSaved: document,
-                                    onCompleted(opRslt: ibas.IOperationResult<bo.Document>): void {
-                                        try {
-                                            that.busy(false);
-                                            if (opRslt.resultCode !== 0) {
-                                                throw new Error(opRslt.message);
-                                            }
-                                            that.viewShowed();
-                                            that.messages(ibas.emMessageType.SUCCESS,
-                                                ibas.i18n.prop("shell_upload") + ibas.i18n.prop("shell_sucessful"));
-                                        } catch (error) {
-                                            that.messages(error);
-                                        }
+                ibas.queues.execute(datas,
+                    (data, next) => {
+                        let boRepository: bo.BORepositoryDocuments = new bo.BORepositoryDocuments();
+                        boRepository.upload({
+                            boKeys: this.bo.toString(),
+                            file: data,
+                            onCompleted(opRslt: ibas.IOperationResult<bo.IDocument>): void {
+                                try {
+                                    if (opRslt.resultCode !== 0) {
+                                        throw new Error(opRslt.message);
                                     }
-                                });
+                                    next();
+                                } catch (error) {
+                                    next(error);
+                                }
                             }
-                        } catch (error) {
-                            that.messages(error);
+                        });
+                    },
+                    (error) => {
+                        this.busy(false);
+                        if (error instanceof Error) {
+                            this.messages(error);
+                        } else {
+                            this.messages(ibas.emMessageType.SUCCESS,
+                                ibas.i18n.prop("shell_upload") + ibas.i18n.prop("shell_sucessful"));
+                            this.viewShowed();
                         }
                     }
-                });
+                );
                 this.proceeding(ibas.emMessageType.INFORMATION, ibas.i18n.prop("shell_uploading_file"));
             }
             /** 下载文件 */
@@ -191,6 +194,13 @@ namespace documents {
                     }
                 });
             }
+            private viewFile(document: bo.Document): void {
+                if (ibas.objects.isNull(document)) {
+                    return;
+                }
+                app.views(document);
+                this.close();
+            }
         }
         /** 业务对象文档服务-视图 */
         export interface IDocumentServiceView extends ibas.IView {
@@ -204,6 +214,8 @@ namespace documents {
             downloadFileEvent: Function;
             /** 删除事件 */
             deleteEvent: Function;
+            /** 查看文件 */
+            viewFileEvent: Function;
         }
         /** 业务对象文档服务映射 */
         export class DocumentServiceMapping extends ibas.ServiceMapping {

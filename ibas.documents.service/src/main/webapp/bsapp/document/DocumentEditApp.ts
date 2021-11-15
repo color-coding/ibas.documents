@@ -30,9 +30,8 @@ namespace documents {
                 super.registerView();
                 // 其他事件
                 this.view.deleteDataEvent = this.deleteData;
-                this.view.createDataEvent = this.createData;
                 this.view.uploadFileEvent = this.uploadFile;
-                this.view.downloadFileEvent = this.downloadFile;
+                this.view.viewDataEvent = this.viewData;
             }
             /** 视图显示后 */
             protected viewShowed(): void {
@@ -94,6 +93,10 @@ namespace documents {
             }
             /** 保存数据 */
             protected saveData(): void {
+                if (ibas.objects.isNull(this.editData) || ibas.strings.isEmpty(this.editData.sign)) {
+                    this.messages(ibas.emMessageType.WARNING, ibas.i18n.prop("documents_please_upload_file"));
+                    return;
+                }
                 this.busy(true);
                 let that: this = this;
                 let boRepository: bo.BORepositoryDocuments = new bo.BORepositoryDocuments();
@@ -141,58 +144,23 @@ namespace documents {
                     }
                 });
             }
-            /** 新建数据，参数1：是否克隆 */
-            protected createData(clone: boolean): void {
-                let that: this = this;
-                let createData: Function = function (): void {
-                    if (clone) {
-                        // 克隆对象
-                        that.editData = that.editData.clone();
-                        that.proceeding(ibas.emMessageType.WARNING, ibas.i18n.prop("shell_data_cloned_new"));
-                        that.viewShowed();
-                    } else {
-                        // 新建对象
-                        that.editData = new bo.Document();
-                        that.proceeding(ibas.emMessageType.WARNING, ibas.i18n.prop("shell_data_created_new"));
-                        that.viewShowed();
-                    }
-                };
-                if (that.editData.isDirty) {
-                    this.messages({
-                        type: ibas.emMessageType.QUESTION,
-                        title: ibas.i18n.prop(this.name),
-                        message: ibas.i18n.prop("shell_data_not_saved_continue"),
-                        actions: [ibas.emMessageAction.YES, ibas.emMessageAction.NO],
-                        onCompleted(action: ibas.emMessageAction): void {
-                            if (action === ibas.emMessageAction.YES) {
-                                createData();
-                            }
-                        }
-                    });
-                } else {
-                    createData();
-                }
-            }
             /** 上传文件 */
-            uploadFile(data: FormData): void {
+            uploadFile(data: File): void {
                 this.busy(true);
                 let that: this = this;
                 let boRepository: bo.BORepositoryDocuments = new bo.BORepositoryDocuments();
                 boRepository.upload({
-                    fileData: data,
-                    onCompleted(opRslt: ibas.IOperationResult<ibas.FileData>): void {
+                    file: data,
+                    onCompleted(opRslt: ibas.IOperationResult<bo.Document>): void {
                         try {
                             that.busy(false);
                             if (opRslt.resultCode !== 0) {
                                 throw new Error(opRslt.message);
                             }
-                            let fileData: ibas.FileData = opRslt.resultObjects.firstOrDefault();
-                            if (!ibas.objects.isNull(fileData)) {
-                                that.editData.name = fileData.originalName;
-                                that.editData.sign = fileData.fileName;
-                                that.messages(ibas.emMessageType.SUCCESS,
-                                    ibas.i18n.prop("shell_upload") + ibas.i18n.prop("shell_sucessful"));
-                            }
+                            that.messages(ibas.emMessageType.SUCCESS,
+                                ibas.i18n.prop("shell_upload") + ibas.i18n.prop("shell_sucessful"));
+                            that.editData = opRslt.resultObjects.firstOrDefault();
+                            that.viewShowed();
                         } catch (error) {
                             that.messages(error);
                         }
@@ -200,33 +168,8 @@ namespace documents {
                 });
                 this.proceeding(ibas.emMessageType.INFORMATION, ibas.i18n.prop("shell_uploading_file"));
             }
-            /** 下载文件 */
-            downloadFile(): void {
-                this.busy(true);
-                let criteria: ibas.ICriteria = new ibas.Criteria();
-                let condition: ibas.ICondition = criteria.conditions.create();
-                condition.alias = ibas.CRITERIA_CONDITION_ALIAS_FILE_NAME;
-                condition.value = this.editData.sign;
-                let that: this = this;
-                let boRepository: bo.BORepositoryDocuments = new bo.BORepositoryDocuments();
-                boRepository.download({
-                    criteria: criteria,
-                    onCompleted(opRslt: ibas.IOperationResult<Blob>): void {
-                        try {
-                            that.busy(false);
-                            if (opRslt.resultCode !== 0) {
-                                throw new Error(opRslt.message);
-                            }
-                            let data: Blob = opRslt.resultObjects.firstOrDefault();
-                            if (!ibas.objects.isNull(data)) {
-                                ibas.files.save(data, that.editData.name);
-                            }
-                        } catch (error) {
-                            that.messages(error);
-                        }
-                    }
-                });
-                this.proceeding(ibas.emMessageType.INFORMATION, ibas.i18n.prop("shell_downloading_file"));
+            private viewData(): void {
+                app.views(this.editData);
             }
         }
         /** 视图-文档 */
@@ -235,12 +178,10 @@ namespace documents {
             showDocument(data: bo.Document): void;
             /** 删除数据事件 */
             deleteDataEvent: Function;
-            /** 新建数据事件，参数1：是否克隆 */
-            createDataEvent: Function;
             /** 上传文件 */
             uploadFileEvent: Function;
-            /** 下载文件 */
-            downloadFileEvent: Function;
+            /** 查看数据 */
+            viewDataEvent: Function;
         }
     }
 }

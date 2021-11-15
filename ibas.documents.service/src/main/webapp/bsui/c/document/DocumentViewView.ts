@@ -19,17 +19,25 @@ namespace documents {
                     let that: this = this;
                     return this.page = new sap.extension.m.Page("", {
                         showHeader: false,
+                        showSubHeader: true,
                         subHeader: new sap.m.Bar("", {
                             contentLeft: [
-                                new sap.m.Button("", {
-                                    text: ibas.i18n.prop("shell_data_edit"),
-                                    visible: this.mode === ibas.emViewMode.VIEW ? false : true,
-                                    type: sap.m.ButtonType.Transparent,
-                                    icon: "sap-icon://edit",
-                                    press: function (): void {
-                                        that.fireViewEvents(that.editDataEvent);
+                                new sap.m.Title("", {
+                                    text: {
+                                        parts: [
+                                            {
+                                                path: "objectKey",
+                                                type: new sap.extension.data.Numeric()
+                                            },
+                                            {
+                                                path: "name",
+                                                type: new sap.extension.data.Alphanumeric()
+                                            }
+                                        ]
                                     }
-                                }),
+                                }).addStyleClass("sapUiTinyMarginBegin"),
+                            ],
+                            contentRight: [
                                 new sap.m.Button("", {
                                     text: ibas.i18n.prop("documents_download_file"),
                                     type: sap.m.ButtonType.Transparent,
@@ -43,15 +51,39 @@ namespace documents {
                     });
                 }
                 private page: sap.extension.m.Page;
-
                 /** 显示数据 */
                 showDocument(data: bo.Document): void {
-                    this.page.setTitle(ibas.strings.format("{0} - {1}", this.page.getTitle(), data.name));
+                    this.page.setModel(new sap.extension.model.JSONModel(data));
                     if (data.name.toLowerCase().endsWith(".pdf")) {
                         this.page.addContent(new sap.m.PDFViewer("", {
                             showDownloadButton: false,
-                            source: new bo.BORepositoryDocuments().toUrl(data),
+                            source: data.url(),
                         }));
+                    } else if (IMAGES.findIndex((value) => {
+                        return data.name.toLowerCase().endsWith("." + value) ? true : false;
+                    }) >= 0) {
+                        this.page.addContent(new sap.m.FlexBox("", {
+                            width: "100%",
+                            height: "100%",
+                            justifyContent: sap.m.FlexJustifyContent.Center,
+                            renderType: sap.m.FlexRendertype.Div,
+                            items: [
+                                new sap.m.Image("", {
+                                    width: "100%",
+                                    src: data.url(),
+                                    error(this: sap.m.Image, event: sap.ui.base.Event): void {
+                                        (<any>this.getParent()).addContent(new sap.m.MessagePage("", {
+                                            text: ibas.i18n.prop("documents_unrecognized_document"),
+                                            description: "",
+                                            showHeader: false,
+                                            showNavButton: false,
+                                            textDirection: sap.ui.core.TextDirection.Inherit
+                                        }));
+                                    },
+                                })
+                            ]
+                        }));
+                        this.page.setEnableScrolling(true);
                     } else {
                         this.page.addContent(new sap.m.MessagePage("", {
                             text: ibas.i18n.prop("documents_unrecognized_document"),
@@ -64,5 +96,6 @@ namespace documents {
                 }
             }
         }
+        const IMAGES: string[] = ["jpeg", "jpg", "png", "gif", "bmp", "raw"];
     }
 }

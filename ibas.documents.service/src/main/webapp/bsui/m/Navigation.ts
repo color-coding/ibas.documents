@@ -24,6 +24,9 @@ namespace documents {
                     case app.DocumentService.APPLICATION_ID:
                         view = new m.DocumentServiceView();
                         break;
+                    case app.DocumentViewApp.APPLICATION_ID:
+                        view = new m.DocumentViewView();
+                        break;
                     default:
                         break;
                 }

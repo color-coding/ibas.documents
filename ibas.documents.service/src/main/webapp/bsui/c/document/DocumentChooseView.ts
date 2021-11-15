@@ -35,12 +35,21 @@ namespace documents {
                             }),
                             new sap.extension.table.DataColumn("", {
                                 label: ibas.i18n.prop("bo_document_name"),
-                                width: "20rem",
                                 template: new sap.extension.m.Text("", {
                                 }).bindProperty("bindingValue", {
                                     path: "name",
                                     type: new sap.extension.data.Alphanumeric()
                                 }),
+                                width: "24rem",
+                            }),
+                            new sap.extension.table.DataColumn("", {
+                                label: ibas.i18n.prop("bo_document_version"),
+                                template: new sap.extension.m.Text("", {
+                                }).bindProperty("bindingValue", {
+                                    path: "version",
+                                    type: new sap.extension.data.Alphanumeric()
+                                }),
+                                width: "8rem",
                             }),
                             new sap.extension.table.DataColumn("", {
                                 label: ibas.i18n.prop("bo_document_activated"),
@@ -48,6 +57,23 @@ namespace documents {
                                 }).bindProperty("bindingValue", {
                                     path: "activated",
                                     type: new sap.extension.data.YesNo(true)
+                                }),
+                                width: "6rem",
+                            }),
+                            new sap.extension.table.DataColumn("", {
+                                label: ibas.i18n.prop("bo_document_createtime"),
+                                template: new sap.extension.m.Text("", {
+                                }).bindProperty("bindingValue", {
+                                    parts: [
+                                        {
+                                            path: "createDate",
+                                            type: new sap.extension.data.Date()
+                                        },
+                                        {
+                                            path: "createTime",
+                                            type: new sap.extension.data.Time()
+                                        }
+                                    ]
                                 }),
                             }),
                             new sap.extension.table.DataColumn("", {
@@ -58,39 +84,25 @@ namespace documents {
                                     formatter(data: any): any {
                                         return ibas.businessobjects.describe(data);
                                     }
-                                })
+                                }),
+                                width: "16rem",
                             }),
                             new sap.extension.table.DataColumn("", {
-                                label: ibas.i18n.prop("bo_document_version"),
-                                template: new sap.extension.m.Text("", {
+                                label: ibas.i18n.prop("bo_document_dataowner"),
+                                template: new sap.extension.m.UserText("", {
                                 }).bindProperty("bindingValue", {
-                                    path: "version",
+                                    path: "dataOwner",
                                     type: new sap.extension.data.Alphanumeric()
                                 }),
                             }),
                             new sap.extension.table.DataColumn("", {
-                                label: ibas.i18n.prop("bo_document_tags"),
+                                label: ibas.i18n.prop("bo_document_remarks"),
                                 template: new sap.extension.m.Text("", {
                                 }).bindProperty("bindingValue", {
-                                    path: "tags",
+                                    path: "remarks",
                                     type: new sap.extension.data.Alphanumeric()
                                 }),
-                            }),
-                            new sap.extension.table.DataColumn("", {
-                                label: ibas.i18n.prop("bo_document_reference1"),
-                                template: new sap.extension.m.Text("", {
-                                }).bindProperty("bindingValue", {
-                                    path: "reference1",
-                                    type: new sap.extension.data.Alphanumeric()
-                                }),
-                            }),
-                            new sap.extension.table.DataColumn("", {
-                                label: ibas.i18n.prop("bo_document_reference2"),
-                                template: new sap.extension.m.Text("", {
-                                }).bindProperty("bindingValue", {
-                                    path: "reference2",
-                                    type: new sap.extension.data.Alphanumeric()
-                                }),
+                                width: "20rem",
                             }),
                         ],
                         nextDataSet(event: sap.ui.base.Event): void {
