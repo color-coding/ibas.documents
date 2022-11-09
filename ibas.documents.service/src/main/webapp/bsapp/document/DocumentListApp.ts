@@ -31,6 +31,8 @@ namespace documents {
                 // 其他事件
                 this.view.editDataEvent = this.editData;
                 this.view.deleteDataEvent = this.deleteData;
+                this.view.downloadFileEvent = this.dowloadFile;
+                this.view.uploadFileEvent = this.uploadFile;
             }
             /** 视图显示后 */
             protected viewShowed(): void {
@@ -144,6 +146,104 @@ namespace documents {
                     }
                 });
             }
+            /** 上传文件 */
+            protected uploadFile(files: File[]): void {
+                files = ibas.arrays.create(files);
+                if (files.length > 0) {
+                    this.messages({
+                        type: ibas.emMessageType.QUESTION,
+                        title: ibas.i18n.prop(this.name),
+                        message: ibas.i18n.prop("documents_multiple_file_upload_continue", files.length),
+                        actions: [ibas.emMessageAction.YES, ibas.emMessageAction.NO],
+                        onCompleted: (action) => {
+                            if (action !== ibas.emMessageAction.YES) {
+                                return;
+                            }
+                            let criteria: ibas.Criteria = new ibas.Criteria();
+                            this.busy(true);
+                            this.proceeding(ibas.emMessageType.INFORMATION, ibas.i18n.prop("shell_uploading_file"));
+                            let boRepository: bo.BORepositoryDocuments = new bo.BORepositoryDocuments();
+                            ibas.queues.execute(files, (data, next) => {
+                                // 处理数据
+                                boRepository.upload({
+                                    file: data,
+                                    onCompleted: (opRslt) => {
+                                        if (opRslt.resultCode !== 0) {
+                                            next(new Error(opRslt.message));
+                                        } else {
+                                            for (let item of opRslt.resultObjects) {
+                                                let condition: ibas.ICondition = criteria.conditions.create();
+                                                condition.alias = bo.Document.PROPERTY_OBJECTKEY_NAME;
+                                                condition.value = String(item.objectKey);
+                                                if (criteria.conditions.length > 0) {
+                                                    condition.relationship = ibas.emConditionRelationship.OR;
+                                                }
+                                            }
+                                            next();
+                                        }
+                                    }
+                                });
+                            }, (error) => {
+                                // 处理完成
+                                if (error instanceof Error) {
+                                    this.messages(ibas.emMessageType.ERROR, error.message);
+                                }
+                                if (criteria.conditions.length > 0) {
+                                    this.fetchData(criteria);
+                                }
+                                this.busy(false);
+                            });
+                        }
+                    });
+                }
+            }
+            protected dowloadFile(documents: bo.Document[]): void {
+                documents = ibas.arrays.create(documents);
+                if (documents.length > 0) {
+                    this.messages({
+                        type: ibas.emMessageType.QUESTION,
+                        title: ibas.i18n.prop(this.name),
+                        message: ibas.i18n.prop("documents_multiple_file_download_continue", documents.length),
+                        actions: [ibas.emMessageAction.YES, ibas.emMessageAction.NO],
+                        onCompleted: (action) => {
+                            if (action !== ibas.emMessageAction.YES) {
+                                return;
+                            }
+                            this.busy(true);
+                            this.proceeding(ibas.emMessageType.INFORMATION, ibas.i18n.prop("shell_downloading_file"));
+                            let criteria: ibas.Criteria = new ibas.Criteria();
+                            let condition: ibas.ICondition = criteria.conditions.create();
+                            condition.alias = ibas.CRITERIA_CONDITION_ALIAS_FILE_NAME;
+                            let boRepository: bo.BORepositoryDocuments = new bo.BORepositoryDocuments();
+                            ibas.queues.execute(documents, (data, next) => {
+                                condition.value = data.sign;
+                                boRepository.download({
+                                    criteria: criteria,
+                                    onCompleted: (opRslt) => {
+                                        if (opRslt.resultCode !== 0) {
+                                            next(new Error(opRslt.message));
+                                        } else {
+                                            for (let item of opRslt.resultObjects) {
+                                                if (!ibas.objects.isNull(item)) {
+                                                    ibas.files.save(item, data.name);
+                                                }
+                                            }
+                                            next();
+                                        }
+                                    }
+                                });
+                            }, (error) => {
+                                // 处理完成
+                                if (error instanceof Error) {
+                                    this.messages(ibas.emMessageType.ERROR, error.message);
+                                }
+                                this.busy(false);
+                            });
+                        }
+                    });
+
+                }
+            }
         }
         /** 视图-文档 */
         export interface IDocumentListView extends ibas.IBOListView {
@@ -153,6 +253,10 @@ namespace documents {
             deleteDataEvent: Function;
             /** 显示数据 */
             showData(datas: bo.Document[]): void;
+            /** 上传文件 */
+            uploadFileEvent: Function;
+            /** 下载文件 */
+            downloadFileEvent: Function;
         }
     }
 }

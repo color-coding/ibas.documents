@@ -20,6 +20,10 @@ namespace documents {
                 editDataEvent: Function;
                 /** 删除数据事件，参数：删除对象集合 */
                 deleteDataEvent: Function;
+                /** 上传文件 */
+                uploadFileEvent: Function;
+                /** 下载文件 */
+                downloadFileEvent: Function;
                 /** 绘制视图 */
                 draw(): any {
                     let that: this = this;
@@ -189,13 +193,25 @@ namespace documents {
                                 }),
                                 new sap.m.ToolbarSeparator(""),
                                 new sap.m.Button("", {
-                                    text: ibas.i18n.prop("shell_data_delete"),
+                                    text: ibas.i18n.prop("documents_download_document"),
                                     type: sap.m.ButtonType.Transparent,
-                                    icon: "sap-icon://delete",
+                                    icon: "sap-icon://download-from-cloud",
                                     press: function (): void {
-                                        that.fireViewEvents(that.deleteDataEvent, that.table.getSelecteds());
+                                        that.fireViewEvents(that.downloadFileEvent, that.table.getSelecteds());
                                     }
                                 }),
+                                new sap.m.ToolbarSeparator(""),
+                                new sap.m.Button("", {
+                                    text: ibas.i18n.prop("documents_upload_document"),
+                                    type: sap.m.ButtonType.Transparent,
+                                    icon: "sap-icon://upload-to-cloud",
+                                    press: function (): void {
+                                        ibas.files.open((files) => {
+                                            that.fireViewEvents(that.uploadFileEvent, files);
+                                        }, { multiple: true });
+                                    }
+                                }),
+                                new sap.m.ToolbarSeparator(""),
                                 new sap.m.ToolbarSpacer(""),
                                 new sap.m.Button("", {
                                     type: sap.m.ButtonType.Transparent,
