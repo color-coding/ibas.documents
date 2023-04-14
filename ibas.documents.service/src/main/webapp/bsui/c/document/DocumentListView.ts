@@ -84,6 +84,7 @@ namespace documents {
                                         }
                                     ]
                                 }),
+                                width: "12rem",
                             }),
                             new sap.extension.table.DataColumn("", {
                                 label: ibas.i18n.prop("bo_document_bokeys"),
