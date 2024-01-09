@@ -33,6 +33,7 @@ namespace documents {
                 this.register(new DocumentChooseServiceMapping());
                 this.register(new DocumentServiceMapping());
                 this.register(new DocumentViewServiceMapping());
+                this.register(new DocumentViewLinkerMapping());
                 // 注册常驻应用
 
             }
@@ -77,6 +78,7 @@ namespace documents {
             protected registers(): void {
                 this.register(new DocumentServiceMapping());
                 this.register(new DocumentViewServiceMapping());
+                this.register(new DocumentViewLinkerMapping());
             }
         }
     }

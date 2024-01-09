@@ -124,5 +124,70 @@ namespace documents {
                 return new DocumentViewApp();
             }
         }
+
+        /** 文档查看链接者 */
+        export class DocumentViewLinker extends ibas.ServiceApplication<ibas.IBOViewView, ibas.IBOLinkServiceContract>  {
+            /** 应用标识 */
+            static APPLICATION_ID: string = "ab9ed70c-b440-4b6c-8099-1436b42e40fa";
+            /** 应用名称 */
+            static APPLICATION_NAME: string = "documents_app_document_view";
+            /** 业务对象编码 */
+            static BUSINESS_OBJECT_CODE: string = bo.Document.BUSINESS_OBJECT_CODE;
+            /** 构造函数 */
+            constructor() {
+                super();
+                this.id = DocumentViewLinker.APPLICATION_ID;
+                this.name = DocumentViewLinker.APPLICATION_NAME;
+                this.description = ibas.i18n.prop(this.name);
+            }
+            /** 视图显示后 */
+            protected viewShowed(): void {
+            }
+            protected runService(contract: ibas.IBOLinkServiceContract): void {
+                if (contract && !ibas.strings.isEmpty(contract.linkValue)) {
+                    let criteria: ibas.Criteria = new ibas.Criteria();
+                    criteria.result = 1;
+                    let condition: ibas.ICondition = criteria.conditions.create();
+                    condition.alias = documents.bo.Document.PROPERTY_OBJECTKEY_NAME;
+                    condition.value = contract.linkValue.toString();
+                    let that: this = this;
+                    let boRepository: bo.BORepositoryDocuments = new bo.BORepositoryDocuments();
+                    boRepository.fetchDocument({
+                        criteria: criteria,
+                        onCompleted(opRslt: ibas.IOperationResult<bo.Document>): void {
+                            try {
+                                that.busy(false);
+                                if (opRslt.resultCode !== 0) {
+                                    throw new Error(opRslt.message);
+                                }
+                                if (opRslt.resultObjects.length === 0) {
+                                    that.proceeding(ibas.emMessageType.INFORMATION, ibas.i18n.prop("shell_data_fetched_none"));
+                                }
+                                views(opRslt.resultObjects.firstOrDefault());
+                            } catch (error) {
+                                that.messages(error);
+                            }
+                        }
+                    });
+                } else {
+                    throw new Error(ibas.i18n.prop("shell_please_chooose_data", ibas.i18n.prop("shell_data_view")));
+                }
+            }
+        }
+        /** 文档查看链接者映射 */
+        export class DocumentViewLinkerMapping extends ibas.BOLinkServiceMapping {
+            /** 构造函数 */
+            constructor() {
+                super();
+                this.id = DocumentViewLinker.APPLICATION_ID;
+                this.name = DocumentViewLinker.APPLICATION_NAME;
+                this.boCode = bo.Document.BUSINESS_OBJECT_CODE;
+                this.description = ibas.i18n.prop(this.name);
+            }
+            /** 创建服务实例 */
+            create(): ibas.IService<ibas.IBOLinkServiceCaller> {
+                return new DocumentViewLinker();
+            }
+        }
     }
 }

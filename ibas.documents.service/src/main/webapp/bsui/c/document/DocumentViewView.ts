@@ -33,7 +33,17 @@ namespace documents {
                                                 path: "name",
                                                 type: new sap.extension.data.Alphanumeric()
                                             }
-                                        ]
+                                        ],
+                                        formatter(objectKey: number, name: string): string {
+                                            let builder: ibas.StringBuilder = new ibas.StringBuilder();
+                                            builder.map(null, "");
+                                            builder.map(undefined, "");
+                                            builder.append("#");
+                                            builder.append(objectKey);
+                                            builder.append(" - ");
+                                            builder.append(name);
+                                            return builder.toString();
+                                        }
                                     }
                                 }).addStyleClass("sapUiTinyMarginBegin"),
                             ],
@@ -57,6 +67,8 @@ namespace documents {
                     if (data.name.toLowerCase().endsWith(".pdf")) {
                         this.page.addContent(new sap.m.PDFViewer("", {
                             showDownloadButton: false,
+                            isTrustedSource: true,
+                            displayType: sap.m.PDFViewerDisplayType.Embedded,
                             source: data.url(),
                         }));
                     } else if (IMAGES.findIndex((value) => {
