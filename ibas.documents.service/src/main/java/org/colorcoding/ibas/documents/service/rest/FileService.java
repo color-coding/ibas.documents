@@ -7,6 +7,7 @@ import java.net.URLDecoder;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -50,12 +51,14 @@ public class FileService extends FileRepositoryService {
 	@Path("upload")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	@Produces(MediaType.APPLICATION_JSON)
-	public OperationResult<Document> upload(FormDataMultiPart formData, @QueryParam("token") String token) {
+	public OperationResult<Document> upload(FormDataMultiPart formData,
+			@HeaderParam("authorization") String authorization, @QueryParam("token") String token) {
 		try {
 			FormDataBodyPart bodyPart = formData.getField("file");
 			if (bodyPart == null) {
 				throw new Exception(I18N.prop("msg_dc_not_submit_file"));
 			}
+			token = MyConfiguration.optToken(authorization, token);
 			BORepositoryDocuments boRepository = new BORepositoryDocuments();
 			boRepository.setUserToken(token);
 			IOperationResult<FileData> opRsltFile = this.save(bodyPart, token);
@@ -84,7 +87,7 @@ public class FileService extends FileRepositoryService {
 			if (bodyPart != null) {
 				document.setBOKeys(bodyPart.getValue());
 			}
-			return boRepository.saveDocument(document, token);
+			return boRepository.saveDocument(document, MyConfiguration.optToken(authorization, token));
 		} catch (Exception e) {
 			return new OperationResult<>(e);
 		}
@@ -94,7 +97,8 @@ public class FileService extends FileRepositoryService {
 	@Path("download")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_OCTET_STREAM)
-	public void download(Criteria criteria, @QueryParam("token") String token, @Context HttpServletResponse response) {
+	public void download(Criteria criteria, @HeaderParam("authorization") String authorization,
+			@QueryParam("token") String token, @Context HttpServletResponse response) {
 		try {
 			if (criteria == null || criteria.getConditions().isEmpty()) {
 				throw new WebApplicationException(400);
@@ -102,6 +106,7 @@ public class FileService extends FileRepositoryService {
 			if (criteria.getResultCount() <= 0) {
 				criteria.setResultCount(1);
 			}
+			token = MyConfiguration.optToken(authorization, token);
 			// 获取文件
 			IOperationResult<FileData> operationResult = this.fetch(criteria, token);
 			if (operationResult.getError() != null) {
