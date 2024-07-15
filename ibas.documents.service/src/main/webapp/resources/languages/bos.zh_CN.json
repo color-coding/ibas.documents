@@ -8,6 +8,7 @@
         "bo_document_datasource": "数据源",
         "bo_document_createdate": "创建日期",
         "bo_document_createtime": "创建时间",
+        "bo_document_time": "时间",
         "bo_document_updatedate": "修改日期",
         "bo_document_updatetime": "修改时间",
         "bo_document_createusersign": "创建用户",

@@ -45,7 +45,35 @@ namespace documents {
                                             return builder.toString();
                                         }
                                     }
-                                }).addStyleClass("sapUiTinyMarginBegin"),
+                                }).addStyleClass("sapUiTinyMarginBegin sapUiSmallMarginEnd"),
+                                new sap.extension.m.PropertyObjectAttribute("", {
+                                    title: ibas.i18n.prop("bo_document_version"),
+                                    visible: {
+                                        path: "version",
+                                        formatter(data: any): boolean {
+                                            return data ? true : false;
+                                        }
+                                    }
+                                }).bindProperty("bindingValue", {
+                                    path: "version",
+                                    type: new sap.extension.data.Alphanumeric()
+                                }).addStyleClass("sapUiSmallMarginBegin"),
+                                new sap.extension.m.PropertyObjectAttribute("", {
+                                    title: ibas.i18n.prop("bo_document_tags"),
+                                    visible: {
+                                        path: "tags",
+                                        formatter(data: any): boolean {
+                                            return data ? true : false;
+                                        }
+                                    },
+                                    dataInfo: {
+                                        code: bo.Document.BUSINESS_OBJECT_CODE,
+                                    },
+                                    propertyName: "tags",
+                                }).bindProperty("bindingValue", {
+                                    path: "tags",
+                                    type: new sap.extension.data.Alphanumeric()
+                                }).addStyleClass("sapUiSmallMarginBegin"),
                             ],
                             contentRight: [
                                 new sap.m.Button("", {

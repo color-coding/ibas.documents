@@ -83,7 +83,7 @@ namespace documents {
             /** 关联的数据 */
             private bo: ibas.IBusinessObject;
             /** 上传文件 */
-            uploadFile(data: File | File[]): void {
+            uploadFile(data: File | File[], tags?: String[] | String): void {
                 if (ibas.objects.isNull(data)) {
                     return;
                 }
@@ -92,10 +92,11 @@ namespace documents {
                     return;
                 }
                 this.busy(true);
+                let boRepository: bo.BORepositoryDocuments = new bo.BORepositoryDocuments();
                 ibas.queues.execute(datas,
                     (data, next) => {
-                        let boRepository: bo.BORepositoryDocuments = new bo.BORepositoryDocuments();
                         boRepository.upload({
+                            tags: tags ? ibas.strings.valueOf(tags) : undefined,
                             boKeys: this.bo.toString(),
                             file: data,
                             onCompleted(opRslt: ibas.IOperationResult<bo.IDocument>): void {

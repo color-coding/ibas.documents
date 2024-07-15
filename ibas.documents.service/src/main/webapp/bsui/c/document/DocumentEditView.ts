@@ -65,41 +65,11 @@ namespace documents {
                                                 content: [
                                                     new sap.m.Toolbar("", { visible: false }),
                                                     new sap.m.Label("", { text: ibas.i18n.prop("bo_document_tags") }),
-                                                    new sap.extension.m.MultiComboBox("", {
-                                                        loadItems(this: sap.m.MultiComboBox): void {
-                                                            let boRepository: shell.bo.IBORepositoryShell = ibas.boFactory.create(shell.bo.BO_REPOSITORY_SHELL);
-                                                            boRepository.fetchBizObjectInfo({
-                                                                user: ibas.variablesManager.getValue(ibas.VARIABLE_NAME_USER_CODE),
-                                                                boCode: ibas.config.applyVariables(bo.Document.BUSINESS_OBJECT_CODE),
-                                                                onCompleted: (opRslt) => {
-                                                                    try {
-                                                                        if (opRslt.resultCode !== 0) {
-                                                                            throw new Error(opRslt.message);
-                                                                        }
-                                                                        for (let data of opRslt.resultObjects) {
-                                                                            for (let property of data.properties) {
-                                                                                if (ibas.strings.equalsIgnoreCase(bo.Document.PROPERTY_TAGS_NAME, property.name)) {
-                                                                                    if (property.values instanceof Array) {
-                                                                                        for (let item of property.values) {
-                                                                                            if (ibas.strings.isEmpty(item.value)) {
-                                                                                                continue;
-                                                                                            }
-                                                                                            this.addItem(new sap.extension.m.SelectItem("", {
-                                                                                                key: item.value,
-                                                                                                text: ibas.strings.isEmpty(item.description) ? item.value : item.description,
-                                                                                            }));
-                                                                                        }
-                                                                                    }
-                                                                                }
-                                                                            }
-                                                                            return;
-                                                                        }
-                                                                    } catch (error) {
-                                                                        ibas.logger.log(error);
-                                                                    }
-                                                                }
-                                                            });
-                                                        }
+                                                    new sap.extension.m.PropertyMultiComboBox("", {
+                                                        dataInfo: {
+                                                            code: bo.Document.BUSINESS_OBJECT_CODE,
+                                                        },
+                                                        propertyName: "tags",
                                                     }).bindProperty("bindingValue", {
                                                         path: "tags",
                                                         type: new sap.extension.data.Alphanumeric()

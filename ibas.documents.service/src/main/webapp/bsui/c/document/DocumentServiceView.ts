@@ -89,25 +89,52 @@ namespace documents {
                                                             }
                                                         },
                                                     }),
-                                                    new sap.m.Label("", {
-                                                        text: {
-                                                            parts: [
-                                                                {
+                                                    new sap.m.HBox("", {
+                                                        items: [
+                                                            new sap.extension.m.ObjectAttribute("", {
+                                                                title: ibas.i18n.prop("bo_document_time"),
+                                                            }).bindProperty("bindingValue", {
+                                                                parts: [
+                                                                    {
+                                                                        path: "createDate",
+                                                                        type: new sap.extension.data.Date()
+                                                                    },
+                                                                    {
+                                                                        path: "createTime",
+                                                                        type: new sap.extension.data.Time()
+                                                                    }
+                                                                ]
+                                                            }).addStyleClass("sapUiSmallMarginEnd"),
+                                                            new sap.extension.m.ObjectAttribute("", {
+                                                                title: ibas.i18n.prop("bo_document_version"),
+                                                                visible: {
                                                                     path: "version",
-                                                                    type: new sap.extension.data.Alphanumeric()
+                                                                    formatter(data: any): boolean {
+                                                                        return data ? true : false;
+                                                                    }
                                                                 },
-                                                                {
-                                                                    path: "createDate",
-                                                                    type: new sap.extension.data.Date()
+                                                            }).bindProperty("bindingValue", {
+                                                                path: "version",
+                                                                type: new sap.extension.data.Alphanumeric()
+                                                            }).addStyleClass("sapUiSmallMarginEnd"),
+                                                            new sap.extension.m.PropertyObjectAttribute("", {
+                                                                title: ibas.i18n.prop("bo_document_tags"),
+                                                                visible: {
+                                                                    path: "tags",
+                                                                    formatter(data: any): boolean {
+                                                                        return data ? true : false;
+                                                                    }
                                                                 },
-                                                                {
-                                                                    path: "createTime",
-                                                                    type: new sap.extension.data.Time()
-                                                                }
-                                                            ]
-                                                        },
-                                                    })
-
+                                                                dataInfo: {
+                                                                    code: bo.Document.BUSINESS_OBJECT_CODE,
+                                                                },
+                                                                propertyName: "tags",
+                                                            }).bindProperty("bindingValue", {
+                                                                path: "tags",
+                                                                type: new sap.extension.data.Alphanumeric()
+                                                            }).addStyleClass("sapUiSmallMarginEnd"),
+                                                        ]
+                                                    }),
                                                 ]
                                             }).addStyleClass("sapUiSmallMarginBegin sapUiSmallMarginTopBottom")
                                         ]
@@ -128,7 +155,7 @@ namespace documents {
                             contentLeft: [
                                 new sap.m.Title("", {
                                     titleStyle: sap.ui.core.TitleLevel.H4
-                                }),
+                                }).addStyleClass("sapUiTinyMarginBegin"),
                             ],
                             contentRight: [
                                 new sap.m.SearchField("", {
@@ -158,11 +185,50 @@ namespace documents {
                                         }
                                     }
                                 }),
-                                new sap.m.Button("", {
+                                new sap.m.MenuButton("", {
                                     text: ibas.i18n.prop("documents_upload_document"),
-                                    type: sap.m.ButtonType.Transparent,
+                                    type: sap.m.ButtonType.Accept,
+                                    buttonMode: sap.m.MenuButtonMode.Split,
+                                    menuPosition: sap.ui.core.Popup.Dock.EndBottom,
                                     icon: "sap-icon://upload",
-                                    press: function (): void {
+                                    useDefaultActionOnly: true,
+                                    menu: new sap.m.Menu("", {
+                                        items: {
+                                            path: "/",
+                                            template: new sap.m.MenuItem("", {
+                                                key: {
+                                                    path: "value",
+                                                },
+                                                text: {
+                                                    path: "description",
+                                                },
+                                                press(this: sap.m.MenuItem): void {
+                                                    ibas.files.open((files) => {
+                                                        that.fireViewEvents(that.uploadFileEvent, files, this.getKey());
+                                                    }, { multiple: true });
+                                                }
+                                            })
+                                        },
+                                    }),
+                                    beforeMenuOpen(this: sap.m.MenuButton): void {
+                                        let boRepository: shell.bo.IBORepositoryShell = ibas.boFactory.create(shell.bo.BO_REPOSITORY_SHELL);
+                                        boRepository.fetchBizObjectInfo({
+                                            user: ibas.variablesManager.getValue(ibas.VARIABLE_NAME_USER_CODE),
+                                            boCode: ibas.config.applyVariables(bo.Document.BUSINESS_OBJECT_CODE),
+                                            onCompleted: (opRslt) => {
+                                                for (let data of opRslt.resultObjects) {
+                                                    for (let property of data.properties) {
+                                                        if (ibas.strings.equalsIgnoreCase(bo.Document.PROPERTY_TAGS_NAME, property.name)) {
+                                                            if (property.values instanceof Array) {
+                                                                this.getMenu().setModel(new sap.extension.model.JSONModel(property.values));
+                                                            } return;
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        });
+                                    },
+                                    defaultAction(this: sap.m.MenuButton): void {
                                         ibas.files.open((files) => {
                                             that.fireViewEvents(that.uploadFileEvent, files);
                                         }, { multiple: true });
