@@ -1,1 +1,33 @@
-[]
+[
+    {
+        "bo_document": "Document",
+        "bo_document_objectkey": "Object Key",
+        "bo_document_objectcode": "Object Code",
+        "bo_document_loginst": "Instance Number (Version)",
+        "bo_document_series": "Number Series",
+        "bo_document_datasource": "Data Source",
+        "bo_document_createdate": "Creation Date",
+        "bo_document_createtime": "Creation Time",
+        "bo_document_updatedate": "Modification Date",
+        "bo_document_updatetime": "Modification Time",
+        "bo_document_createusersign": "Created User",
+        "bo_document_updateusersign": "Modified User",
+        "bo_document_createactionid": "Creation Action ID",
+        "bo_document_updateactionid": "Update Action ID",
+        "bo_document_dataowner": "Data Owner",
+        "bo_document_teammembers": "Team Members",
+        "bo_document_organization": "Data Owning Organization",
+        "bo_document_approvalstatus": "Approval Status",
+        "bo_document_activated": "Activated",
+        "bo_document_sign": "File Identifier",
+        "bo_document_name": "File Name",
+        "bo_document_version": "Version",
+        "bo_document_tags": "Tags",
+        "bo_document_bokeys": "Business Object Keys",
+        "bo_document_reference1": "Reference 1",
+        "bo_document_reference2": "Reference 2",
+        "bo_document_remarks": "Remarks",
+        "bo_document_url": "File URL",
+        "bo_document_closing_delimiter": "----End----"
+    }
+]
