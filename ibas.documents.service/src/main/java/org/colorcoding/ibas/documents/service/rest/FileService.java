@@ -1,7 +1,6 @@
 package org.colorcoding.ibas.documents.service.rest;
 
 import java.io.File;
-import java.io.OutputStream;
 import java.net.URLDecoder;
 
 import javax.servlet.http.HttpServletResponse;
@@ -22,10 +21,10 @@ import org.colorcoding.ibas.bobas.common.Criteria;
 import org.colorcoding.ibas.bobas.common.ICondition;
 import org.colorcoding.ibas.bobas.common.IOperationResult;
 import org.colorcoding.ibas.bobas.common.OperationResult;
-import org.colorcoding.ibas.bobas.data.FileData;
+import org.colorcoding.ibas.bobas.data.FileItem;
 import org.colorcoding.ibas.bobas.i18n.I18N;
+import org.colorcoding.ibas.bobas.organization.InvalidAuthorizationException;
 import org.colorcoding.ibas.bobas.repository.FileRepository;
-import org.colorcoding.ibas.bobas.repository.InvalidTokenException;
 import org.colorcoding.ibas.bobas.repository.jersey.FileRepositoryService;
 import org.colorcoding.ibas.documents.MyConfiguration;
 import org.colorcoding.ibas.documents.bo.document.Document;
@@ -44,7 +43,7 @@ public class FileService extends FileRepositoryService {
 
 	public FileService() {
 		// 设置工作目录，资源目录下的报表目录
-		this.getRepository().setRepositoryFolder(FileService.WORK_FOLDER);
+		this.setRepositoryFolder(FileService.WORK_FOLDER);
 	}
 
 	@POST
@@ -59,35 +58,36 @@ public class FileService extends FileRepositoryService {
 				throw new Exception(I18N.prop("msg_dc_not_submit_file"));
 			}
 			token = MyConfiguration.optToken(authorization, token);
-			BORepositoryDocuments boRepository = new BORepositoryDocuments();
-			boRepository.setUserToken(token);
-			IOperationResult<FileData> opRsltFile = this.save(bodyPart, token);
-			if (opRsltFile.getError() != null) {
-				throw opRsltFile.getError();
+			try (BORepositoryDocuments boRepository = new BORepositoryDocuments()) {
+				boRepository.setUserToken(token);
+				IOperationResult<FileItem> opRsltFile = this.save(bodyPart, token);
+				if (opRsltFile.getError() != null) {
+					throw opRsltFile.getError();
+				}
+				FileItem fileItem = opRsltFile.getResultObjects().firstOrDefault();
+				if (fileItem == null) {
+					throw new Exception(I18N.prop("msg_dc_not_found_file",
+							URLDecoder.decode(bodyPart.getContentDisposition().getFileName(), "UTF-8")));
+				}
+				Document document = new Document();
+				document.setDataOwner(this.getCurrentUser().getId());
+				document.setOrganization(this.getCurrentUser().getBelong());
+				document.setName(URLDecoder.decode(bodyPart.getContentDisposition().getFileName(), "UTF-8"));
+				document.setSign(fileItem.getName());
+				bodyPart = formData.getField("tags");
+				if (bodyPart != null) {
+					document.setTags(bodyPart.getValue());
+				}
+				bodyPart = formData.getField("version");
+				if (bodyPart != null) {
+					document.setVersion(bodyPart.getValue());
+				}
+				bodyPart = formData.getField("bokeys");
+				if (bodyPart != null) {
+					document.setBOKeys(bodyPart.getValue());
+				}
+				return boRepository.saveDocument(document, MyConfiguration.optToken(authorization, token));
 			}
-			FileData fileData = opRsltFile.getResultObjects().firstOrDefault();
-			if (fileData == null) {
-				throw new Exception(I18N.prop("msg_dc_not_found_file",
-						URLDecoder.decode(bodyPart.getContentDisposition().getFileName(), "UTF-8")));
-			}
-			Document document = new Document();
-			document.setDataOwner(this.getCurrentUser().getId());
-			document.setOrganization(this.getCurrentUser().getBelong());
-			document.setName(fileData.getOriginalName());
-			document.setSign(fileData.getFileName());
-			bodyPart = formData.getField("tags");
-			if (bodyPart != null) {
-				document.setTags(bodyPart.getValue());
-			}
-			bodyPart = formData.getField("version");
-			if (bodyPart != null) {
-				document.setVersion(bodyPart.getValue());
-			}
-			bodyPart = formData.getField("bokeys");
-			if (bodyPart != null) {
-				document.setBOKeys(bodyPart.getValue());
-			}
-			return boRepository.saveDocument(document, MyConfiguration.optToken(authorization, token));
 		} catch (Exception e) {
 			return new OperationResult<>(e);
 		}
@@ -108,35 +108,36 @@ public class FileService extends FileRepositoryService {
 			}
 			token = MyConfiguration.optToken(authorization, token);
 			// 获取文件
-			IOperationResult<FileData> operationResult = this.fetch(criteria, token);
+			IOperationResult<FileItem> operationResult = this.fetch(criteria, token);
 			if (operationResult.getError() != null) {
 				throw operationResult.getError();
 			}
-			FileData fileData = operationResult.getResultObjects().firstOrDefault();
-			if (fileData == null) {
+			FileItem fileItem = operationResult.getResultObjects().firstOrDefault();
+			if (fileItem == null) {
 				throw new WebApplicationException(Response.Status.NOT_FOUND);
 			}
 			criteria = new Criteria();
 			criteria.setResultCount(1);
 			ICondition condition = criteria.getConditions().create();
 			condition.setAlias(Document.PROPERTY_SIGN.getName());
-			condition.setValue(fileData.getFileName());
+			condition.setValue(fileItem.getName());
 			// 查询文档记录
-			BORepositoryDocuments boRepository = new BORepositoryDocuments();
-			boRepository.setUserToken(token);
-			IDocument document = boRepository.fetchDocument(criteria).getResultObjects().firstOrDefault();
-			if (document == null) {
-				throw new WebApplicationException(Response.Status.NOT_FOUND);
+			try (BORepositoryDocuments boRepository = new BORepositoryDocuments()) {
+				boRepository.setUserToken(token);
+				IDocument document = boRepository.fetchDocument(criteria).getResultObjects().firstOrDefault();
+				if (document == null) {
+					throw new WebApplicationException(Response.Status.NOT_FOUND);
+				}
+				// 设置文件名
+				response.setHeader("Content-Disposition", String.format("attachment;filename=%s", document.getName()));
+				// 设置内容类型
+				response.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+				// 写入响应输出流
+				fileItem.writeTo(response.getOutputStream());
+				// 提交
+				response.getOutputStream().flush();
 			}
-			// 设置文件名
-			response.setHeader("Content-Disposition", String.format("attachment;filename=%s", document.getName()));
-			// 设置内容类型
-			response.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-			// 写入响应输出流
-			OutputStream os = response.getOutputStream();
-			os.write(fileData.getFileBytes());
-			os.flush();
-		} catch (InvalidTokenException e) {
+		} catch (InvalidAuthorizationException e) {
 			throw new WebApplicationException(Response.Status.UNAUTHORIZED);
 		} catch (WebApplicationException e) {
 			throw e;
@@ -156,33 +157,34 @@ public class FileService extends FileRepositoryService {
 			condition.setAlias(Document.PROPERTY_SIGN.getName());
 			condition.setValue(resource);
 			// 查询文档记录
-			BORepositoryDocuments boRepository = new BORepositoryDocuments();
-			boRepository.setUserToken(token);
-			IDocument document = boRepository.fetchDocument(criteria).getResultObjects().firstOrDefault();
-			if (document == null) {
-				throw new WebApplicationException(Response.Status.NOT_FOUND);
+			try (BORepositoryDocuments boRepository = new BORepositoryDocuments()) {
+				boRepository.setUserToken(token);
+				IDocument document = boRepository.fetchDocument(criteria).getResultObjects().firstOrDefault();
+				if (document == null) {
+					throw new WebApplicationException(Response.Status.NOT_FOUND);
+				}
+				criteria = new Criteria();
+				criteria.setResultCount(1);
+				condition = criteria.getConditions().create();
+				condition.setAlias(FileRepository.CONDITION_ALIAS_FILE_NAME);
+				condition.setValue(resource);
+				// 获取文件
+				IOperationResult<FileItem> operationResult = this.fetch(criteria, token);
+				if (operationResult.getError() != null) {
+					throw operationResult.getError();
+				}
+				FileItem fileItem = operationResult.getResultObjects().firstOrDefault();
+				if (fileItem == null) {
+					throw new WebApplicationException(Response.Status.NOT_FOUND);
+				}
+				// 设置内容类型
+				response.setContentType(this.getContentType(fileItem));
+				// 写入响应输出流
+				fileItem.writeTo(response.getOutputStream());
+				// 提交
+				response.getOutputStream().flush();
 			}
-			criteria = new Criteria();
-			criteria.setResultCount(1);
-			condition = criteria.getConditions().create();
-			condition.setAlias(FileRepository.CRITERIA_CONDITION_ALIAS_FILE_NAME);
-			condition.setValue(resource);
-			// 获取文件
-			IOperationResult<FileData> operationResult = this.fetch(criteria, token);
-			if (operationResult.getError() != null) {
-				throw operationResult.getError();
-			}
-			FileData fileData = operationResult.getResultObjects().firstOrDefault();
-			if (fileData == null) {
-				throw new WebApplicationException(Response.Status.NOT_FOUND);
-			}
-			// 设置内容类型
-			response.setContentType(this.getContentType(fileData));
-			// 写入响应输出流
-			OutputStream os = response.getOutputStream();
-			os.write(fileData.getFileBytes());
-			os.flush();
-		} catch (InvalidTokenException e) {
+		} catch (InvalidAuthorizationException e) {
 			throw new WebApplicationException(Response.Status.UNAUTHORIZED);
 		} catch (WebApplicationException e) {
 			throw e;
