@@ -8,18 +8,15 @@ import javax.xml.bind.annotation.XmlType;
 
 import org.colorcoding.ibas.bobas.approval.IApprovalData;
 import org.colorcoding.ibas.bobas.bo.BusinessObject;
+import org.colorcoding.ibas.bobas.bo.BusinessObjectUnit;
 import org.colorcoding.ibas.bobas.bo.IBOUserFields;
 import org.colorcoding.ibas.bobas.core.IPropertyInfo;
-import org.colorcoding.ibas.bobas.data.ArrayList;
 import org.colorcoding.ibas.bobas.data.DateTime;
 import org.colorcoding.ibas.bobas.data.emApprovalStatus;
 import org.colorcoding.ibas.bobas.data.emYesNo;
-import org.colorcoding.ibas.bobas.mapping.BusinessObjectUnit;
-import org.colorcoding.ibas.bobas.mapping.DbField;
-import org.colorcoding.ibas.bobas.mapping.DbFieldType;
-import org.colorcoding.ibas.bobas.ownership.ITeamDataOwnership;
+import org.colorcoding.ibas.bobas.db.DbField;
+import org.colorcoding.ibas.bobas.db.DbFieldType;
 import org.colorcoding.ibas.documents.MyConfiguration;
-import org.colorcoding.ibas.documents.data.DataConvert;
 
 /**
  * 获取-文档
@@ -29,8 +26,7 @@ import org.colorcoding.ibas.documents.data.DataConvert;
 @XmlType(name = Document.BUSINESS_OBJECT_NAME, namespace = MyConfiguration.NAMESPACE_BO)
 @XmlRootElement(name = Document.BUSINESS_OBJECT_NAME, namespace = MyConfiguration.NAMESPACE_BO)
 @BusinessObjectUnit(code = Document.BUSINESS_OBJECT_CODE)
-public class Document extends BusinessObject<Document>
-		implements IDocument, ITeamDataOwnership, IApprovalData, IBOUserFields {
+public class Document extends BusinessObject<Document> implements IDocument, IApprovalData, IBOUserFields {
 
 	/**
 	 * 序列化版本标记
@@ -871,19 +867,6 @@ public class Document extends BusinessObject<Document>
 		super.initialize();// 基类初始化，不可去除
 		this.setObjectCode(MyConfiguration.applyVariables(BUSINESS_OBJECT_CODE));
 		this.setActivated(emYesNo.YES);
-	}
-
-	@Override
-	public Integer[] getTeamUsers() {
-		ArrayList<Integer> users = new ArrayList<>();
-		if (!DataConvert.isNullOrEmpty(this.getTeamMembers())) {
-			for (String value : this.getTeamMembers().split(",")) {
-				if (DataConvert.isNumeric(value)) {
-					users.add(Integer.valueOf(value));
-				}
-			}
-		}
-		return users.toArray(new Integer[] {});
 	}
 
 }

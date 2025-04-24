@@ -24,7 +24,7 @@ public class BORepositoryDocuments extends BORepositoryServiceApplication
 	 * @return 操作结果
 	 */
 	public OperationResult<Document> fetchDocument(ICriteria criteria, String token) {
-		return super.fetch(criteria, token, Document.class);
+		return super.fetch(Document.class, criteria, token);
 	}
 
 	/**
