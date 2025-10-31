@@ -1,6 +1,5 @@
 package org.colorcoding.ibas.documents.service.rest;
 
-import java.io.File;
 import java.net.URLDecoder;
 
 import javax.servlet.http.HttpServletResponse;
@@ -21,10 +20,9 @@ import org.colorcoding.ibas.bobas.common.Criteria;
 import org.colorcoding.ibas.bobas.common.ICondition;
 import org.colorcoding.ibas.bobas.common.IOperationResult;
 import org.colorcoding.ibas.bobas.common.OperationResult;
-import org.colorcoding.ibas.bobas.data.FileItem;
+import org.colorcoding.ibas.bobas.file.FileItem;
 import org.colorcoding.ibas.bobas.i18n.I18N;
 import org.colorcoding.ibas.bobas.organization.InvalidAuthorizationException;
-import org.colorcoding.ibas.bobas.repository.FileRepository;
 import org.colorcoding.ibas.bobas.repository.jersey.FileRepositoryService;
 import org.colorcoding.ibas.documents.MyConfiguration;
 import org.colorcoding.ibas.documents.bo.document.Document;
@@ -35,15 +33,13 @@ import org.glassfish.jersey.media.multipart.FormDataMultiPart;
 
 @Path("file")
 public class FileService extends FileRepositoryService {
-	/**
-	 * 工作目录
-	 */
-	public final static String WORK_FOLDER = MyConfiguration.getConfigValue(MyConfiguration.CONFIG_ITEM_DOCUMENT_FOLDER,
-			MyConfiguration.getDataFolder() + File.separator + "documents_files");
 
 	public FileService() {
-		// 设置工作目录，资源目录下的报表目录
-		this.setRepositoryFolder(FileService.WORK_FOLDER);
+		// 设置文件仓库位置
+		this.setRepositoryFolder("documents_files");
+		// 设置是否分组存储文件
+		this.setGroupingFiles(
+				MyConfiguration.getConfigValue(MyConfiguration.CONFIG_ITEM_FILE_REPOSITORY_GROUPING_FILES, true));
 	}
 
 	@POST
@@ -166,7 +162,7 @@ public class FileService extends FileRepositoryService {
 				criteria = new Criteria();
 				criteria.setResultCount(1);
 				condition = criteria.getConditions().create();
-				condition.setAlias(FileRepository.CONDITION_ALIAS_FILE_NAME);
+				condition.setAlias(FileRepositoryService.CONDITION_ALIAS_FILE_NAME);
 				condition.setValue(resource);
 				// 获取文件
 				IOperationResult<FileItem> operationResult = this.fetch(criteria, token);
@@ -179,6 +175,11 @@ public class FileService extends FileRepositoryService {
 				}
 				// 设置内容类型
 				response.setContentType(this.getContentType(fileItem));
+				// 设置缓存时间（单位：秒）
+				int cacheAge = 60 * 60 * 24 * 30;
+				// 设置缓存控制头
+				response.setHeader("Cache-Control", "private, max-age=" + cacheAge);
+				response.setDateHeader("Expires", System.currentTimeMillis() + cacheAge * 1000L);
 				// 写入响应输出流
 				fileItem.writeTo(response.getOutputStream());
 				// 提交
