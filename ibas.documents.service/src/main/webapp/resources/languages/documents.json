@@ -21,6 +21,5 @@
     "documents_bo_not_saved": "Please save data first",
     "documents_bo_document_icon": "sap-icon://documents",
     "documents_bo_title": "{0}",
-    "documents_not_found_businessojbect_link_service": "Service to view [{0}] not found",
-    "documents_closing_delimiter": "---- End ----"
+    "documents_not_found_businessojbect_link_service": "Service to view [{0}] not found"
 }
