@@ -9,7 +9,7 @@ namespace documents {
     export namespace app {
 
         /** 应用-文档 */
-        export class DocumentEditApp extends ibas.BOEditApplication<IDocumentEditView, bo.Document> {
+        export class DocumentEditApp extends ibas.BOEditService<IDocumentEditView, bo.Document> {
 
             /** 应用标识 */
             static APPLICATION_ID: string = "dbaf1533-d9fc-4246-8fbd-a113b948c4a1";
@@ -182,6 +182,21 @@ namespace documents {
             uploadFileEvent: Function;
             /** 查看数据 */
             viewDataEvent: Function;
+        }
+        /** Document编辑服务映射 */
+        export class DocumentEditServiceMapping extends ibas.BOEditServiceMapping {
+            /** 构造函数 */
+            constructor() {
+                super();
+                this.id = DocumentEditApp.APPLICATION_ID;
+                this.name = DocumentEditApp.APPLICATION_NAME;
+                this.boCode = DocumentEditApp.BUSINESS_OBJECT_CODE;
+                this.description = ibas.i18n.prop(this.name);
+            }
+            /** 创建服务实例 */
+            create(): ibas.IService<ibas.IBOEditServiceCaller<bo.Document>> {
+                return new DocumentEditApp();
+            }
         }
     }
 }
