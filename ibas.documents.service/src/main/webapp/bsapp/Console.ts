@@ -24,6 +24,7 @@ namespace documents {
                 // 注册功能
                 this.register(new DocumentFunc());
                 // 注册服务应用
+                this.register(new DocumentEditServiceMapping());
                 this.register(new DocumentChooseServiceMapping());
                 this.register(new DocumentServiceMapping());
                 this.register(new DocumentViewServiceMapping());
